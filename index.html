@@ -444,6 +444,7 @@ p { margin: 0; }
     </section>
 
     <p class="intro" id="intro"></p>
+    <div id="homeBio"></div>
     <div class="notice" id="homeNotice" hidden></div>
 
     <div class="cta">
@@ -1007,6 +1008,137 @@ p { margin: 0; }
       lines.forEach(function (tx, k) { if (tx) o += '<text class="' + (k >= 6 ? "a-dtx" : "a-tx") + '" x="12" y="' + (36 + k * 13) + '">' + tx + "</text>"; });
       return svgFig(o, 172, "Модель Пуанкаре: через точку P проходит много прямых, не пересекающих прямую a");
     },
+    odd: function () {
+      var o = "", c = 20, x0 = 28, y0 = 14;
+      for (var i = 0; i < 5; i++) for (var j = 0; j < 5; j++) {
+        var k = Math.max(i, j);
+        o += '<rect class="a-f" style="stroke-width:1;' + (k % 2 ? "" : "fill:var(--ink-soft)") + '" x="' + (x0 + j * c) + '" y="' + (y0 + i * c) + '" width="' + c + '" height="' + c + '"/>';
+      }
+      for (k = 0; k < 5; k++) o += '<text class="a-m" text-anchor="middle" x="' + (x0 + k * c + c / 2) + '" y="' + (y0 + k * c + 14.5) + '">' + (2 * k + 1) + "</text>";
+      o += '<text class="a-m" x="150" y="58" style="font-size:15px"><tspan font-style="normal">1 + 3 + 5 + 7 + 9 = 5</tspan><tspan font-style="normal" font-size="0.65em" dy="-6">2</tspan></text>';
+      o += '<text class="a-tx" x="150" y="80">сумма первых n нечётных = n²</text>';
+      o += '<text class="a-tx" x="150" y="96">каждое следующее число —</text><text class="a-tx" x="150" y="108">уголок вокруг квадрата</text>';
+      return svgFig(o, 128, "Квадрат 5 на 5, сложенный из уголков по 1, 3, 5, 7 и 9 клеток");
+    },
+    detect: function () {
+      var o = "", X0 = 24, Y = 118, th = 40, al = 47, n = 70, step = 3.9;
+      var seed = 7, rnd = function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+      o += line(X0, Y, 302, Y, "a-l") + arrowHead(302, Y, "r") + line(X0, Y, X0, 14, "a-l") + arrowHead(X0, 14, "u");
+      o += '<text class="a-m" x="298" y="' + (Y + 15) + '" text-anchor="end">t</text>';
+      var d = "";
+      for (var t = 0; t < n; t++) {
+        var mu = t < th ? 88 : 56, v = mu + (rnd() + rnd() + rnd() - 1.5) * 14;
+        d += (t ? " L" : "M") + (X0 + 4 + t * step).toFixed(1) + "," + v.toFixed(1);
+      }
+      o += '<path class="a-l" style="stroke-width:1" d="' + d + '"/>';
+      var xt = X0 + 4 + th * step, xa = X0 + 4 + al * step;
+      o += '<line class="a-t" stroke-dasharray="2 3" x1="' + X0 + '" y1="88" x2="' + xt + '" y2="88"/><line class="a-t" stroke-dasharray="2 3" x1="' + xt + '" y1="56" x2="300" y2="56"/>';
+      o += '<line class="a-d" stroke-dasharray="4 3" x1="' + xt + '" y1="22" x2="' + xt + '" y2="' + Y + '"/>';
+      o += '<text class="a-dtx" x="' + (xt - 4) + '" y="18" text-anchor="end">θ — разладка</text>';
+      o += '<line class="a-d" style="stroke-width:1.6" x1="' + xa + '" y1="30" x2="' + xa + '" y2="' + Y + '"/>';
+      o += '<text class="a-dtx" x="' + (xa + 4) + '" y="34">тревога</text>';
+      return svgFig(o, 134, "Наблюдения меняют уровень в момент θ, вскоре после этого поднимается тревога");
+    },
+    billiard: function () {
+      var L = 132, R0 = 256, T = 12, B = 136, cx = 194, cy = 74, r = 26, o = "";
+      o += '<rect class="a-f" x="' + L + '" y="' + T + '" width="' + (R0 - L) + '" height="' + (B - T) + '"/>';
+      o += '<circle class="a-f" style="fill:var(--ink-soft)" cx="' + cx + '" cy="' + cy + '" r="' + r + '"/>';
+      function path(a, hits) {
+        var px = L + 10, py = B - 14, vx = Math.cos(a), vy = Math.sin(a), d = "M" + px.toFixed(1) + "," + py.toFixed(1);
+        for (var k = 0; k < hits; k++) {
+          var tx = vx > 0 ? (R0 - px) / vx : (L - px) / vx, ty = vy > 0 ? (B - py) / vy : (T - py) / vy, tc = Infinity;
+          var qx = px - cx, qy = py - cy, b = qx * vx + qy * vy, cc = qx * qx + qy * qy - r * r, disc = b * b - cc;
+          if (disc > 0) { var tt = -b - Math.sqrt(disc); if (tt > 1e-6) tc = tt; }
+          var t = Math.min(tx, ty, tc);
+          px += vx * t; py += vy * t; d += " L" + px.toFixed(1) + "," + py.toFixed(1);
+          if (t === tc) { var nx = (px - cx) / r, ny = (py - cy) / r, dot = vx * nx + vy * ny; vx -= 2 * dot * nx; vy -= 2 * dot * ny; }
+          else if (t === tx) vx = -vx; else vy = -vy;
+        }
+        return d;
+      }
+      o += '<path class="a-d" stroke-dasharray="3 2" d="' + path(-1.02, 9) + '"/>';
+      o += '<path class="a-l" style="stroke-width:1.1" d="' + path(-1.0, 9) + '"/>';
+      o += '<circle class="a-dot" cx="' + (L + 10) + '" cy="' + (B - 14) + '" r="3"/>';
+      o += '<text class="a-tx" x="12" y="30">два шара стартуют</text><text class="a-tx" x="12" y="42">почти одинаково</text>';
+      o += '<text class="a-dtx" x="12" y="62">и через несколько</text><text class="a-dtx" x="12" y="74">ударов расходятся</text>';
+      return svgFig(o, 148, "Бильярд Синая: квадратный стол с круглым препятствием и две расходящиеся траектории");
+    },
+    crack: function () {
+      var o = "", x0 = 40, x1 = 282, yt = 30, yb = 130, yc = 80, tip = 232, len = tip - x0;
+      o += '<rect class="a-f" x="' + x0 + '" y="' + yt + '" width="' + (x1 - x0) + '" height="' + (yb - yt) + '"/>';
+      function h(x) { var u = Math.max(0, (tip - x) / len); return 15 * Math.pow(u, 1.5) + 3 * u; }
+      var up = "", dn = "";
+      for (var x = x0; x <= tip; x += 3) { up += (x === x0 ? "M" : " L") + x + "," + (yc - h(x)).toFixed(1); }
+      for (x = tip; x >= x0; x -= 3) { dn += " L" + x + "," + (yc + h(x)).toFixed(1); }
+      o += '<path class="a-f" style="fill:var(--land)" d="' + up + " L" + tip + "," + yc + dn + ' Z"/>';
+      for (x = 196; x <= 226; x += 7.5) {
+        var g = h(x);
+        o += '<path class="a-d" d="M' + x + "," + (yc - g - 9) + " L" + x + "," + (yc - g - 1) + " M" + (x - 2) + "," + (yc - g - 4) + " L" + x + "," + (yc - g - 1) + " L" + (x + 2) + "," + (yc - g - 4) + '"/>';
+        o += '<path class="a-d" d="M' + x + "," + (yc + g + 9) + " L" + x + "," + (yc + g + 1) + " M" + (x - 2) + "," + (yc + g + 4) + " L" + x + "," + (yc + g + 1) + " L" + (x + 2) + "," + (yc + g + 4) + '"/>';
+      }
+      o += '<path class="a-d" d="M194,' + (yt - 6) + " L194," + (yt - 2) + " L228," + (yt - 2) + " L228," + (yt - 6) + '"/>';
+      o += '<text class="a-dtx" x="211" y="' + (yt - 10) + '" text-anchor="middle">зона сцепления</text>';
+      [70, 110].forEach(function (x) {
+        o += line(x, yt, x, yt - 16, "a-l") + arrowHead(x, yt - 16, "u");
+        o += line(x, yb, x, yb + 14, "a-l") + '<path class="a-l" d="M' + (x - 3) + "," + (yb + 8) + " L" + x + "," + (yb + 14) + " L" + (x + 3) + "," + (yb + 8) + '"/>';
+      });
+      o += '<text class="a-tx" x="118" y="' + (yt - 6) + '">нагрузка</text>';
+      o += '<text class="a-tx" x="' + (tip + 6) + '" y="' + (yc + 3) + '">кончик</text>';
+      return svgFig(o, 150, "Трещина в материале: края смыкаются плавно, у кончика их стягивают силы сцепления");
+    },
+    lineage: function () {
+      var o = "", w = 66, hb = 24, y1 = 18, y2 = 104;
+      var chain = [["Бугаев", "1837–1903"], ["Егоров", "1869–1931"], ["Лузин", "1883–1950"], ["Колмогоров", "1903–1987"]];
+      var kids = ["Синай", "Ширяев", "Баренблатт", "Арнольд"];
+      chain.forEach(function (c, k) {
+        var x = 10 + k * 78;
+        o += '<rect class="a-f" style="' + (k === 0 ? "fill:var(--ink-soft);" : "") + (k === 3 ? "stroke-width:2" : "") + '" x="' + x + '" y="' + y1 + '" width="' + w + '" height="' + hb + '" rx="3"/>';
+        o += '<text class="a-tx" style="fill:var(--fg)" x="' + (x + w / 2) + '" y="' + (y1 + 15) + '" text-anchor="middle">' + c[0] + "</text>";
+        o += '<text class="a-tx" x="' + (x + w / 2) + '" y="' + (y1 + hb + 11) + '" text-anchor="middle" style="font-size:7px">' + c[1] + "</text>";
+        if (k < 3) o += line(x + w, y1 + hb / 2, x + 78, y1 + hb / 2, "a-l") + arrowHead(x + 78, y1 + hb / 2, "r");
+      });
+      var kx = 10 + 3 * 78 + w / 2;
+      kids.forEach(function (n, k) {
+        var x = 14 + k * 76;
+        o += '<path class="a-t" style="stroke-opacity:.8" d="M' + kx + "," + (y1 + hb + 16) + " C" + kx + "," + (y2 - 18) + " " + (x + 32) + "," + (y2 - 30) + " " + (x + 32) + "," + y2 + '"/>';
+        o += '<rect class="a-f" x="' + x + '" y="' + y2 + '" width="64" height="' + hb + '" rx="3"/>';
+        o += '<text class="a-tx" style="fill:var(--fg)" x="' + (x + 32) + '" y="' + (y2 + 15) + '" text-anchor="middle">' + n + "</text>";
+      });
+      o += '<text class="a-dtx" x="44" y="' + (y2 - 16) + '" text-anchor="middle">ученики</text>';
+      return svgFig(o, 136, "Научная родословная: Бугаев, Егоров, Лузин, Колмогоров и его ученики Синай, Ширяев, Баренблатт и Арнольд");
+    },
+    catmap: function () {
+      var S = 108, A = [22, 16], B = [190, 16], o = "";
+      // кот в единичном квадрате: y вниз
+      var parts = [], k, t;
+      var head = []; for (k = 0; k <= 72; k++) { t = k / 72 * 2 * Math.PI; head.push([0.5 + 0.27 * Math.cos(t), 0.58 + 0.22 * Math.sin(t)]); }
+      parts.push(head);
+      parts.push([[0.29, 0.47], [0.30, 0.22], [0.43, 0.38]]);
+      parts.push([[0.57, 0.38], [0.70, 0.22], [0.71, 0.47]]);
+      [0.4, 0.6].forEach(function (ex) { var e = []; for (k = 0; k <= 24; k++) { t = k / 24 * 2 * Math.PI; e.push([ex + 0.035 * Math.cos(t), 0.55 + 0.045 * Math.sin(t)]); } parts.push(e); });
+      parts.push([[0.47, 0.64], [0.53, 0.64], [0.5, 0.68], [0.47, 0.64]]);
+      parts.push([[0.5, 0.68], [0.5, 0.71], [0.45, 0.74]]); parts.push([[0.5, 0.71], [0.55, 0.74]]);
+      parts.push([[0.36, 0.66], [0.14, 0.62]]); parts.push([[0.36, 0.69], [0.14, 0.71]]);
+      parts.push([[0.64, 0.66], [0.86, 0.62]]); parts.push([[0.64, 0.69], [0.86, 0.71]]);
+      var d1 = "", d2 = "";
+      parts.forEach(function (pl) {
+        pl.forEach(function (p, i) { d1 += (i ? " L" : "M") + (A[0] + p[0] * S).toFixed(1) + "," + (A[1] + p[1] * S).toFixed(1); });
+        for (var i = 1; i < pl.length; i++) {
+          var a = pl[i - 1], b = pl[i], n = Math.max(2, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / 0.004));
+          for (var j = 0; j < n; j++) {
+            var x = a[0] + (b[0] - a[0]) * j / n, y = 1 - (a[1] + (b[1] - a[1]) * j / n);
+            var X = (2 * x + y) % 1, Y = (x + y) % 1;
+            d2 += "M" + (B[0] + X * S).toFixed(1) + "," + (B[1] + (1 - Y) * S).toFixed(1) + "h0.01";
+          }
+        }
+      });
+      o += '<rect class="a-f" x="' + A[0] + '" y="' + A[1] + '" width="' + S + '" height="' + S + '"/><rect class="a-f" x="' + B[0] + '" y="' + B[1] + '" width="' + S + '" height="' + S + '"/>';
+      o += '<path class="a-l" style="stroke-width:1.1" d="' + d1 + '"/>';
+      o += '<path class="a-l" style="stroke-width:1.5" d="' + d2 + '"/>';
+      o += line(A[0] + S + 10, A[1] + S / 2, B[0] - 10, B[1] + S / 2, "a-l") + arrowHead(B[0] - 10, B[1] + S / 2, "r");
+      o += '<text class="a-m" x="160" y="' + (A[1] + S + 20) + '" text-anchor="middle"><tspan>(x, y)</tspan><tspan font-style="normal"> ↦ </tspan><tspan>(2x + y, x + y)</tspan><tspan font-style="normal"> mod 1</tspan></text>';
+      return svgFig(o, 152, "Кот Арнольда: рисунок кота и то, что с ним стало после одного шага преобразования");
+    },
     pnp: function () {
       var o = "";
       o += '<text class="a-tx" x="84" y="16" text-anchor="middle">если P ≠ NP</text>';
@@ -1025,7 +1157,13 @@ p { margin: 0; }
     kpp: "Доля носителей полезного гена <i>u</i> в моменты <i>t</i><sub>1</sub> &lt; <i>t</i><sub>2</sub> &lt; <i>t</i><sub>3</sub>. Профиль не меняет формы и сдвигается вправо с постоянной скоростью.",
     dynkin: "Диаграмма Дынкина алгебры Ли E<sub>8</sub>: восемь точек, семь линий.",
     lobachevsky: "Модель Пуанкаре плоскости Лобачевского: прямые — это дуги, перпендикулярные краю круга, и диаметры.",
-    pnp: "Две возможные картины мира. Какая из них верна, неизвестно."
+    pnp: "Две возможные картины мира. Какая из них верна, неизвестно.",
+    odd: "Первое математическое открытие пятилетнего Колмогорова: каждое следующее нечётное число достраивает квадрат на одну клетку больше.",
+    detect: "Наблюдения идут вокруг одного уровня, а в момент <i>θ</i> что-то ломается. Задача — поднять тревогу как можно раньше и не поднимать её зря.",
+    billiard: "Бильярд Синая: две траектории, начавшиеся почти одинаково, после нескольких ударов о круглое препятствие расходятся совсем.",
+    crack: "Модель Баренблатта: у кончика трещины действуют силы сцепления (красные стрелки), поэтому края смыкаются плавно и напряжение не уходит в бесконечность.",
+    lineage: "Научная родословная: от Бугаева через Егорова и Лузина к Колмогорову и его ученикам.",
+    catmap: "Кот Арнольда: отображение растягивает картинку и перемешивает её по квадрату. Если повторять его на картинке из пикселей, через какое-то число шагов кот снова соберётся."
   };
   function coinsHTML(rows) {
     var n = rows[0].length, o = '<figure class="coins">';
@@ -1050,10 +1188,10 @@ p { margin: 0; }
     if (!TTS) return "";
     return '<div class="listen"><button class="btn btn-secondary btn-sm" type="button" data-say="' + esc(sayId) + '">▶ Слушать</button>' + (hint ? '<span class="hint">' + esc(hint) + "</span>" : "") + "</div>";
   }
-  function bioListHTML(list) {
+  function bioListHTML(list, label) {
     if (!list.length) return "";
-    return '<div class="bios"><p class="mono-label">Дополнительные биографии</p><ul class="bio-list">' + list.map(function (st) {
-      return '<li><a class="bio-link" href="#bio-' + esc(st.id) + '"><span class="bio-txt"><span class="bio-name">' + esc(st.name) + "</span>" +
+    return '<div class="bios"><p class="mono-label">' + esc(label || "Дополнительные биографии") + '</p><ul class="bio-list">' + list.map(function (st) {
+      return '<li><a class="bio-link" href="#bio-' + esc(st.id) + '"><span class="bio-txt"><span class="bio-name">' + esc(st.name) + (st.draft ? ' <span class="chip draft">черновик</span>' : "") + "</span>" +
         '<span class="bio-meta">' + esc(st.years) + (st.tag ? " · " + esc(st.tag) : "") + "</span>" +
         (st.when ? '<span class="bio-when">' + esc(st.when) + "</span>" : "") +
         '</span><span class="bio-go" aria-hidden="true">→</span></a></li>';
@@ -1168,6 +1306,7 @@ p { margin: 0; }
       "<div><dt>Точек</dt><dd>" + N + "</dd></div>" +
       "<div><dt>Над рекой</dt><dd>" + CABLE_M + NB + "м</dd></div>";
     $("intro").textContent = T.intro;
+    $("homeBio").innerHTML = bioListHTML(STORIES.filter(function (x) { return x.id === "kolmogorov"; }), "Кому посвящена прогулка");
     var wp = T.stops.map(pt);
     wp.splice(4, 0, [T.legs[3].from.lat, T.legs[3].from.lon]);
     $("fullYa").href = "https://yandex.ru/maps/?rtext=" + wp.map(ll).join("~") + "&rtt=pd";
@@ -1297,7 +1436,7 @@ p { margin: 0; }
     var sibs = storiesAt(st.place), nx = sibs[sibs.indexOf(st) + 1];
     $("card").innerHTML =
       '<a class="btn-link back-link" href="#s' + n + '">← Точка ' + n + ": " + esc(s.short) + "</a>" +
-      '<header class="stop-head"><p class="eyebrow">Дополнительная биография · точка ' + n + "</p><h2>" + esc(st.name) + '</h2><p class="years-line">' + esc(st.years) + (st.tag ? " · " + esc(st.tag) : "") + "</p></header>" +
+      '<header class="stop-head"><p class="eyebrow">Дополнительная биография · точка ' + n + "</p><h2>" + esc(st.name) + "</h2>" + (st.draft ? '<span><span class="chip draft">черновик текста</span></span>' : "") + '<p class="years-line">' + esc(st.years) + (st.tag ? " · " + esc(st.tag) : "") + "</p></header>" +
       (st.when ? '<p class="when-note">' + esc(st.when) + "</p>" : "") +
       listenHTML(st.audio, st.id) +
       storyBody(st) +
