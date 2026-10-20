@@ -347,7 +347,6 @@ p { margin: 0; }
 .chip.draft { color: var(--muted); border-style: dashed; }
 .here-links { font-size: 0.88rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px; }
 
-.lead { font-family: var(--f-display); font-size: 1.32rem; line-height: 1.35; }
 .text { display: flex; flex-direction: column; gap: 12px; max-width: 64ch; }
 .listen { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .listen audio { width: 100%; max-width: 100%; }
@@ -362,34 +361,37 @@ p { margin: 0; }
 }
 .formula .f i { font-style: italic; }
 .formula p { font-size: 0.92rem; color: var(--muted); max-width: 52ch; }
-.practical { font-size: 0.94rem; color: var(--fg); padding-left: 12px; border-left: 2px solid var(--line); }
+/* Разделы карточки точки */
+.sec { display: flex; flex-direction: column; gap: 12px; padding-top: 20px; border-top: 1px solid var(--line); scroll-margin-top: 100px; }
+.sec-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.sec-h { font-family: var(--f-display); font-weight: 700; font-size: 1.36rem; line-height: 1.2; }
+.facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 14px; margin: 0; font-size: 0.98rem; }
+.facts dt { font-family: var(--f-mono); font-size: 0.74rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); padding-top: 4px; }
+.facts dd { margin: 0; min-width: 0; }
+.leg-meta { font-family: var(--f-mono); font-size: 0.84rem; color: var(--muted); }
+.sec .formula { border: 0; padding-block: 4px 0; }
+.bios { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+.bio-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.bio-link {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center;
+  padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--surface); color: var(--fg); text-decoration: none;
+}
+.bio-link:hover { border-color: var(--ink); }
+.bio-txt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.bio-name { font-family: var(--f-display); font-weight: 700; font-size: 1.14rem; line-height: 1.2; }
+.bio-meta { font-size: 0.86rem; color: var(--muted); line-height: 1.4; }
+.bio-when { font-family: var(--f-mono); font-size: 0.74rem; color: var(--ink); }
+.bio-go { color: var(--ink); font-size: 1.25rem; }
+.back-link { align-self: flex-start; text-decoration: none; }
+.years-line { font-family: var(--f-mono); font-size: 0.86rem; color: var(--muted); line-height: 1.5; }
+.when-note { align-self: flex-start; font-size: 0.92rem; color: var(--ink); border: 1px dashed var(--ink); border-radius: 10px; padding: 8px 12px; }
+.stop .art figcaption i { font-family: var(--f-math); font-size: 1.05em; }
 
-.next { display: flex; flex-direction: column; gap: 10px; }
-.next > h3 { font-family: var(--f-body); font-weight: 650; font-size: 1.12rem; }
-.next .meta { font-family: var(--f-mono); font-size: 0.84rem; color: var(--muted); }
 .pager { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 10px; padding-top: 4px; }
 .pager .btn-primary { min-height: 54px; }
 .pager .solo { grid-column: 1 / -1; }
 
-/* Рассказы о математиках */
-.flow { display: flex; flex-direction: column; gap: 26px; }
-.toc { display: flex; flex-direction: column; gap: 8px; }
-.toc-row { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip-btn {
-  min-height: 40px; padding: 6px 14px; border-radius: 999px;
-  border: 1px solid var(--ink); background: var(--surface); color: var(--ink);
-  font-weight: 600; font-size: 0.92rem; cursor: pointer;
-}
-.chip-btn:hover { background: var(--ink-soft); }
-.chip-btn .way { font-weight: 400; color: var(--muted); }
-.story { display: flex; flex-direction: column; gap: 14px; padding-top: 22px; border-top: 1px solid var(--line); scroll-margin-top: 108px; }
-.next .story { margin-top: 8px; }
-.story-head { display: flex; flex-direction: column; gap: 4px; }
-.story-head h3 { font-family: var(--f-display); font-weight: 700; font-size: 1.6rem; line-height: 1.12; }
-.story-head .years { font-family: var(--f-mono); font-size: 0.86rem; color: var(--muted); font-variant-numeric: tabular-nums; }
-.story .art { margin-block: 4px; }
-.story .art figcaption { font-size: 0.84rem; line-height: 1.45; padding: 8px 10px; }
-.story .art figcaption i { font-family: var(--f-math); font-size: 1.05em; }
 .coins { margin: 4px 0; display: flex; flex-direction: column; gap: 10px; }
 .coin-row { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 8px; align-items: center; }
 .coin-n { font-family: var(--f-mono); font-size: 0.8rem; color: var(--muted); }
@@ -934,7 +936,7 @@ p { margin: 0; }
     });
     return o + "<figcaption>О — орёл, Р — решка. Вероятность каждой строки одна и та же: (1/2)<sup>" + n + "</sup> = 1/" + Math.pow(2, n) + ".</figcaption></figure>";
   }
-  function storyHTML(st) {
+  function storyBody(st) {
     var fig = FIG[st.figure] ? '<figure class="art">' + FIG[st.figure]() + (FIGCAP[st.figure] ? "<figcaption>" + FIGCAP[st.figure] + "</figcaption>" : "") + "</figure>" : "";
     var after = typeof st.figure_after === "number" ? st.figure_after : st.blocks.length - 1;
     var body = "";
@@ -942,26 +944,28 @@ p { margin: 0; }
       body += typeof b === "string" ? "<p>" + esc(b) + "</p>" : (b.coins ? coinsHTML(b.coins) : "");
       if (k === after) body += fig;
     });
-    var listen = st.audio ? '<audio controls preload="none" src="' + esc(st.audio) + '"></audio>'
-      : (TTS ? '<div class="listen"><button class="btn btn-secondary btn-sm" type="button" data-say="' + esc(st.id) + '">▶ Слушать</button></div>' : "");
-    return '<section class="story" id="story-' + esc(st.id) + '">' +
-      '<header class="story-head"><p class="eyebrow">' + esc(st.when || "Рассказ о математике") + "</p><h3>" + esc(st.name) + '</h3><p class="years">' + esc(st.years) + "</p></header>" +
-      listen + '<div class="text">' + body + "</div></section>";
+    return '<div class="text">' + body + "</div>";
   }
-  function flowHTML(s) {
-    var here = storiesAt(s.id), way = storiesAt("way:" + s.id);
-    var main = '<div class="text">' + (s.draft ? '<span><span class="chip draft">черновик текста</span></span>' : "") + s.text.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + "</div>" +
-      (s.formula ? '<aside class="formula" aria-label="Формула точки"><span class="mono-label">Формула точки</span><div class="f">' + s.formula.html + "</div><p>" + esc(s.formula.caption) + "</p></aside>" : "");
-    if (here.length) main = '<section class="story" id="story-place"><header class="story-head"><p class="eyebrow">Об этом месте</p></header>' + main + "</section>";
-    var items = [{ order: s.textOrder || 20, html: main }].concat(here.map(function (st) { return { order: st.order, html: storyHTML(st) }; }));
-    items.sort(function (a, b) { return a.order - b.order; });
-    var all = here.concat(way), toc = "";
-    if (all.length > 1) {
-      toc = '<nav class="toc" aria-label="Рассказы у этой точки"><span class="mono-label">Рассказы у этой точки</span><div class="toc-row">' +
-        all.map(function (st) { return '<button type="button" class="chip-btn" data-jump="story-' + esc(st.id) + '">' + (st.place.indexOf("way:") === 0 ? '<span class="way">в пути · </span>' : "") + esc(st.surname) + "</button>"; }).join("") + "</div></nav>";
-    }
-    return toc + '<div class="flow">' + items.map(function (it) { return it.html; }).join("") + "</div>";
+  function listenHTML(audio, sayId, hint) {
+    if (audio) return '<audio controls preload="none" src="' + esc(audio) + '"></audio>';
+    if (!TTS) return "";
+    return '<div class="listen"><button class="btn btn-secondary btn-sm" type="button" data-say="' + esc(sayId) + '">▶ Слушать</button>' + (hint ? '<span class="hint">' + esc(hint) + "</span>" : "") + "</div>";
   }
+  function bioListHTML(list) {
+    if (!list.length) return "";
+    return '<div class="bios"><p class="mono-label">Дополнительные биографии</p><ul class="bio-list">' + list.map(function (st) {
+      return '<li><a class="bio-link" href="#bio-' + esc(st.id) + '"><span class="bio-txt"><span class="bio-name">' + esc(st.name) + "</span>" +
+        '<span class="bio-meta">' + esc(st.years) + (st.tag ? " · " + esc(st.tag) : "") + "</span>" +
+        (st.when ? '<span class="bio-when">' + esc(st.when) + "</span>" : "") +
+        '</span><span class="bio-go" aria-hidden="true">→</span></a></li>';
+    }).join("") + "</ul></div>";
+  }
+  function secHTML(id, title, inner, extra) {
+    return '<section class="sec" aria-labelledby="' + id + '"><div class="sec-top"><h3 class="sec-h" id="' + id + '">' + title + "</h3>" + (extra || "") + "</div>" + inner + "</section>";
+  }
+  function parasHTML(arr) { return '<div class="text">' + (arr || []).map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + "</div>"; }
+  function noticesHTML(s) { return activeNotices(s).map(function (n) { return '<div class="notice"><b>Сейчас:</b> ' + esc(n.text) + "</div>"; }).join(""); }
+  function stopIndex(id) { for (var k = 0; k < N; k++) if (T.stops[k].id === id) return k; return -1; }
 
   /* ---------- Геолокация ---------- */
   var pos = null, watchId = null, geoState = PREVIEW ? "preview" : ("geolocation" in navigator ? "off" : "unavailable");
@@ -1087,11 +1091,9 @@ p { margin: 0; }
       var leg = "";
       if (i < N - 1) {
         var l = T.legs[i];
-        var wayNames = storiesAt("way:" + s.id).map(function (x) { return x.surname; });
-        leg = '<div class="r-leg">↓ ' + (l.cable ? "канатная дорога " + CABLE_M + NB + "м + " + fmtDist(legWalk[i]) + " пешком" : fmtDist(legWalk[i]) + " пешком · ≈" + NB + fmtDuration(walkMin(legWalk[i]))) +
-          (wayNames.length ? " · в пути: " + esc(wayNames.join(", ")) : "") + "</div>";
+        leg = '<div class="r-leg">↓ ' + (l.cable ? "канатная дорога " + CABLE_M + NB + "м + " + fmtDist(legWalk[i]) + " пешком" : fmtDist(legWalk[i]) + " пешком · ≈" + NB + fmtDuration(walkMin(legWalk[i]))) + "</div>";
       }
-      li.push('<li class="' + cls + '"><button class="r-item" type="button" data-i="' + i + '"><span class="r-num">' + (i + 1) + '</span><span><span class="r-title">' + esc(s.title) + '</span><span class="r-addr">' + esc(s.address) + '</span>' + (storiesAt(s.id).length ? '<span class="r-who">' + esc(storiesAt(s.id).map(function (x) { return x.surname; }).join(" · ")) + "</span>" : "") + '</span><span class="r-state">' + state + "</span></button>" + leg + "</li>");
+      li.push('<li class="' + cls + '"><button class="r-item" type="button" data-i="' + i + '"><span class="r-num">' + (i + 1) + '</span><span><span class="r-title">' + esc(s.title) + '</span><span class="r-addr">' + esc(s.address) + '</span>' + (storiesAt(s.id).length ? '<span class="r-who">Биографии: ' + esc(storiesAt(s.id).map(function (x) { return x.surname; }).join(" · ")) + "</span>" : "") + '</span><span class="r-state">' + state + "</span></button>" + leg + "</li>");
     });
     $("routeList").innerHTML = li.join("");
     $("routeList").querySelectorAll(".r-item").forEach(function (b) {
@@ -1122,55 +1124,62 @@ p { margin: 0; }
     });
   }
 
+  function bindCard() {
+    $("card").querySelectorAll("[data-say]").forEach(function (b) {
+      var key = b.getAttribute("data-say"), parts = null;
+      if (key.indexOf("stop:") === 0) {
+        var st0 = T.stops[stopIndex(key.slice(5))];
+        if (st0) parts = [st0.title].concat(st0.info || [], ["Связь с Колмогоровым"], st0.kolmogorov || []);
+      } else {
+        var st = STORIES.find(function (x) { return x.id === key; });
+        if (st) parts = storyParts(st);
+      }
+      if (parts) b.addEventListener("click", function () { speakParts(parts, b); });
+    });
+  }
+
+  /* Карточка точки: 1) точка n, 2) как прийти, 3) информация (+ биографии),
+     4) связь с Колмогоровым, 5) формула, 6) как пройти на точку n+1. */
   function renderStop(i) {
-    var s = T.stops[i];
-    $("counter").textContent = "Точка " + (i + 1) + " из " + N;
+    var s = T.stops[i], n = i + 1, here = pt(s);
+    $("counter").textContent = "Точка " + n + " из " + N;
     renderSegments();
-    var here = pt(s);
     var art = s.photo
       ? '<img src="' + esc(s.photo) + '" alt="' + esc(s.title) + '" loading="lazy">' + (s.photoCredit ? "<figcaption>" + esc(s.photoCredit) + "</figcaption>" : "")
       : (ART[s.art] ? ART[s.art]() : "");
-    var notices = activeNotices(s).map(function (n) { return '<div class="notice"><b>Сейчас:</b> ' + esc(n.text) + "</div>"; }).join("");
-    var listen = s.audio
-      ? '<audio controls preload="none" src="' + esc(s.audio) + '"></audio>'
-      : (TTS ? '<button class="btn btn-secondary btn-sm" type="button" id="ttsBtn">▶ Слушать</button><span class="hint">голосом телефона</span>' : "");
+    var draft = s.draft ? '<span class="chip draft">черновик</span>' : "";
+
+    var arrive =
+      '<div id="geo" class="geo wide" aria-live="polite"></div>' +
+      '<dl class="facts"><dt>Адрес</dt><dd>' + esc(s.address) + "</dd><dt>Транспорт</dt><dd>" + esc(s.metro) + "</dd></dl>" +
+      (s.arrive ? "<p>" + esc(s.arrive) + "</p>" : "") +
+      (i > 0 ? noticesHTML(T.stops[i - 1]) : "") +
+      '<p class="here-links"><span>Маршрут сюда от моего места:</span><a target="_blank" rel="noopener" href="' + yaRoute(null, here) + '">Яндекс Карты</a><a target="_blank" rel="noopener" href="' + goRoute(null, here) + '">Google Карты</a></p>';
+
     var next = "";
     if (i < N - 1) {
-      var l = T.legs[i], ns = T.stops[i + 1];
-      var from = l.from ? [l.from.lat, l.from.lon] : here;
-      next = '<section class="next" aria-labelledby="nextT"><h3 id="nextT">Как дойти до точки ' + (i + 2) + " — " + esc(ns.short) + "</h3>" +
-        '<p class="meta">' + (l.cable ? "канатная дорога " + CABLE_M + NB + "м, затем ≈" + NB + fmtDist(legWalk[i]) + " пешком" : "≈" + NB + fmtDist(legWalk[i]) + " пешком · " + fmtDuration(walkMin(legWalk[i]))) + "</p>" +
+      var l = T.legs[i], ns = T.stops[i + 1], from = l.from ? [l.from.lat, l.from.lon] : here;
+      next = secHTML("sec-next", "Как пройти на точку " + (n + 1),
+        '<p class="leg-meta">' + esc(ns.title) + "<br>" + (l.cable ? "канатная дорога " + CABLE_M + NB + "м, затем ≈" + NB + fmtDist(legWalk[i]) + " пешком" : "≈" + NB + fmtDist(legWalk[i]) + " пешком · " + fmtDuration(walkMin(legWalk[i]))) + "</p>" +
         "<p>" + esc(l.note) + "</p>" +
-        '<div class="btn-row"><a class="btn btn-secondary" target="_blank" rel="noopener" href="' + yaRoute(from, pt(ns)) + '">Яндекс Карты</a><a class="btn btn-secondary" target="_blank" rel="noopener" href="' + goRoute(from, pt(ns)) + '">Google Карты</a></div>' +
-        storiesAt("way:" + s.id).map(storyHTML).join("") + "</section>";
+        (l.hours ? '<p class="hint">' + esc(l.hours) + "</p>" : "") +
+        noticesHTML(s) +
+        '<div class="btn-row"><a class="btn btn-secondary" target="_blank" rel="noopener" href="' + yaRoute(from, pt(ns)) + '">Яндекс Карты</a><a class="btn btn-secondary" target="_blank" rel="noopener" href="' + goRoute(from, pt(ns)) + '">Google Карты</a></div>');
     }
-    var nextLabel = i < N - 1 ? "Дальше: точка " + (i + 2) + " →" : "Завершить прогулку";
+    var nextLabel = i < N - 1 ? "Дальше: точка " + (n + 1) + " →" : "Завершить прогулку";
+
     $("card").innerHTML =
       '<figure class="art">' + art + "</figure>" +
-      '<header class="stop-head"><p class="eyebrow">Точка ' + (i + 1) + " · " + esc(s.address) + "</p><h2>" + esc(s.title) + '</h2><p class="nick">' + esc(s.nickname) + "</p></header>" +
-      '<div id="geo" class="geo wide" aria-live="polite"></div>' +
-      '<p class="here-links"><span>Маршрут сюда от моего места:</span><a target="_blank" rel="noopener" href="' + yaRoute(null, here) + '">Яндекс</a><a target="_blank" rel="noopener" href="' + goRoute(null, here) + '">Google</a></p>' +
-      notices +
-      '<p class="lead">' + esc(s.lead) + "</p>" +
-      (listen ? '<div class="listen">' + listen + "</div>" : "") +
-      flowHTML(s) +
-      '<p class="practical"><span class="mono-label">Как попасть</span><br>' + esc(s.metro) + ". " + esc(s.practical) + "</p>" +
+      '<header class="stop-head"><p class="eyebrow">Точка ' + n + " из " + N + "</p><h2>" + esc(s.title) + '</h2><p class="nick">' + esc(s.nickname) + "</p></header>" +
+      secHTML("sec-arrive", "Как прийти на точку " + n, arrive) +
+      secHTML("sec-info", "Информация о точке", listenHTML(s.audio, "stop:" + s.id, "о точке и её связи с Колмогоровым") + parasHTML(s.info) + bioListHTML(storiesAt(s.id)), draft) +
+      secHTML("sec-kolm", "Связь с Колмогоровым", parasHTML(s.kolmogorov), draft) +
+      (s.formula ? secHTML("sec-formula", "Формула точки", '<div class="formula"><div class="f">' + s.formula.html + "</div><p>" + esc(s.formula.caption) + "</p></div>") : "") +
       next +
       '<nav class="pager">' + (i > 0 ? '<button class="btn btn-secondary" type="button" id="prevBtn">← Назад</button>' : "") +
       '<button class="btn btn-primary' + (i > 0 ? "" : " solo") + '" type="button" id="nextBtn">' + nextLabel + "</button></nav>";
     renderGeo();
-    var tts = $("ttsBtn");
-    if (tts) tts.addEventListener("click", function () { speakParts([s.title, s.lead].concat(s.text), tts); });
-    $("card").querySelectorAll("[data-say]").forEach(function (b) {
-      var st = STORIES.find(function (x) { return x.id === b.getAttribute("data-say"); });
-      if (st) b.addEventListener("click", function () { speakParts(storyParts(st), b); });
-    });
-    $("card").querySelectorAll("[data-jump]").forEach(function (b) {
-      b.addEventListener("click", function () {
-        var el = document.getElementById(b.getAttribute("data-jump"));
-        if (el) el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
-      });
-    });
+    bindCard();
     var prev = $("prevBtn");
     if (prev) prev.addEventListener("click", function () { openStop(i - 1); });
     $("nextBtn").addEventListener("click", function () {
@@ -1178,6 +1187,26 @@ p { margin: 0; }
       if (i < N - 1) openStop(i + 1);
       else { prog.finished = Date.now(); save(); location.hash = "finish"; }
     });
+  }
+
+  /* Дополнительная биография — отдельная страница со ссылкой обратно на точку. */
+  var bioReturn = null;
+  function renderBio(st) {
+    var i = stopIndex(st.place), n = i + 1, s = T.stops[i];
+    $("counter").textContent = "Точка " + n + " · биография";
+    renderSegments();
+    var sibs = storiesAt(st.place), nx = sibs[sibs.indexOf(st) + 1];
+    $("card").innerHTML =
+      '<a class="btn-link back-link" href="#s' + n + '">← Точка ' + n + ": " + esc(s.short) + "</a>" +
+      '<header class="stop-head"><p class="eyebrow">Дополнительная биография · точка ' + n + "</p><h2>" + esc(st.name) + '</h2><p class="years-line">' + esc(st.years) + (st.tag ? " · " + esc(st.tag) : "") + "</p></header>" +
+      (st.when ? '<p class="when-note">' + esc(st.when) + "</p>" : "") +
+      listenHTML(st.audio, st.id) +
+      storyBody(st) +
+      '<nav class="pager">' + (nx
+        ? '<a class="btn btn-secondary" href="#s' + n + '">← К точке ' + n + '</a><a class="btn btn-primary" href="#bio-' + esc(nx.id) + '">Дальше: ' + esc(nx.surname) + " →</a>"
+        : '<a class="btn btn-primary solo" href="#s' + n + '">Вернуться к точке ' + n + "</a>") + "</nav>";
+    bioReturn = n;
+    bindCard();
   }
 
   function renderFinish() {
@@ -1202,10 +1231,17 @@ p { margin: 0; }
   function route() {
     var h = location.hash.replace(/^#/, "");
     var m = /^s([1-9])$/.exec(h);
+    var bm = /^bio-([a-z0-9-]+)$/.exec(h);
+    var bio = bm ? STORIES.find(function (x) { return x.id === bm[1]; }) : null;
     if (m && +m[1] <= N) {
-      var i = +m[1] - 1;
+      var i = +m[1] - 1, back = bioReturn === i + 1;
+      bioReturn = null;
       prog.cur = i; if (!prog.started) prog.started = Date.now(); save();
       show("walk"); renderStop(i);
+      if (back && $("sec-info")) $("sec-info").scrollIntoView({ block: "start" });
+    } else if (bio && stopIndex(bio.place) >= 0) {
+      prog.cur = stopIndex(bio.place); if (!prog.started) prog.started = Date.now(); save();
+      show("walk"); renderBio(bio);
     } else if (h === "finish") {
       show("finish"); renderFinish();
     } else {

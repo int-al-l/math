@@ -1,6 +1,6 @@
 /* Service worker: офлайн-кэш прогулки.
    Список файлов берётся из tour-data.js; при смене TOUR.version кэш пересобирается. */
-importScripts("tour-data.js");
+importScripts("stories.js", "tour-data.js");
 
 var CACHE = "kolmogorov-walk-" + self.TOUR.version;
 
