@@ -1,0 +1,15 @@
+{
+  "name": "Прогулка Колмогорова",
+  "short_name": "Колмогоров",
+  "description": "Математическая прогулка по Москве памяти А. Н. Колмогорова: РАН, Стекловка, МГУ, канатная дорога, Новодевичье.",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F6F7F3",
+  "theme_color": "#2B3192",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

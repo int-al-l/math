@@ -1,0 +1,1176 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--ARTIFACT-HEAD-START-->
+<title>Прогулка Колмогорова</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!--ARTIFACT-HEAD-END-->
+<meta name="description" content="Математическая прогулка по Москве памяти А. Н. Колмогорова: Академия наук, Стекловка, МГУ, канатная дорога, Новодевичье. Работает без интернета.">
+<meta name="theme-color" content="#F5F6F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17201C" media="(prefers-color-scheme: dark)">
+<meta property="og:title" content="Прогулка Колмогорова">
+<meta property="og:description" content="Пять точек, около 7,5 км и одна канатная дорога — математическая прогулка по Москве.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Колмогоров">
+<!--ARTIFACT-STYLE-START-->
+<style>
+/* Layout: одна колонка-«тетрадь» (до 640px) на клетчатом поле. Сверху карта-схема маршрута,
+   дальше листы: точки, офлайн, QR. Прогулка — пошаговые листы с чертежом, формулой и «Как дойти».
+   Светлая тема — тетрадь в клетку и чернила, тёмная — школьная доска и мел. */
+:root {
+  --bg: #F5F6F1;
+  --grid: #E0E7EF;
+  --surface: #FFFFFF;
+  --land: #F1F4EE;
+  --fg: #1C2033;
+  --muted: #5A6175;
+  --line: #CDD5E2;
+  --ink: #2B3192;
+  --ink-soft: #E8E9F7;
+  --on-ink: #FFFFFF;
+  --mark: #C8382F;
+  --gold: #A6781A;
+  --river: #C6DAEC;
+  --ok: #2D7A4E;
+
+  --f-display: "Old Standard TT", "PT Serif", Georgia, "Times New Roman", serif;
+  --f-body: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "PT Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --f-math: "STIX Two Text", "Old Standard TT", "Times New Roman", serif;
+  --r: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17201C; --grid: #202B26; --surface: #1D2823; --land: #1A241F;
+    --fg: #E7ECE4; --muted: #A2B1A8; --line: #33443C;
+    --ink: #E8D37B; --ink-soft: #2A3832; --on-ink: #17201C;
+    --mark: #F08B7F; --gold: #E8D37B; --river: #284551; --ok: #86CBA0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17201C; --grid: #202B26; --surface: #1D2823; --land: #1A241F;
+  --fg: #E7ECE4; --muted: #A2B1A8; --line: #33443C;
+  --ink: #E8D37B; --ink-soft: #2A3832; --on-ink: #17201C;
+  --mark: #F08B7F; --gold: #E8D37B; --river: #284551; --ok: #86CBA0;
+  color-scheme: dark;
+}
+
+/*HOSTED-ONLY-START*/
+html, body { margin: 0; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+/*HOSTED-ONLY-END*/
+
+@font-face { font-family: "Old Standard TT"; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/old-standard-tt-cyrillic-400-normal.woff2) format("woff2"); unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family: "Old Standard TT"; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/old-standard-tt-latin-400-normal.woff2) format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "Old Standard TT"; font-style: italic; font-weight: 400; font-display: swap; src: url(fonts/old-standard-tt-cyrillic-400-italic.woff2) format("woff2"); unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family: "Old Standard TT"; font-style: italic; font-weight: 400; font-display: swap; src: url(fonts/old-standard-tt-latin-400-italic.woff2) format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "Old Standard TT"; font-style: normal; font-weight: 700; font-display: swap; src: url(fonts/old-standard-tt-cyrillic-700-normal.woff2) format("woff2"); unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family: "Old Standard TT"; font-style: normal; font-weight: 700; font-display: swap; src: url(fonts/old-standard-tt-latin-700-normal.woff2) format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400 900; font-display: swap; src: url(fonts/golos-text-cyrillic-wght-normal.woff2) format("woff2-variations"); unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400 900; font-display: swap; src: url(fonts/golos-text-latin-wght-normal.woff2) format("woff2-variations"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "PT Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/pt-mono-cyrillic-400-normal.woff2) format("woff2"); unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family: "PT Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/pt-mono-latin-400-normal.woff2) format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "STIX Two Text"; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/stix-two-text-latin-400-normal.woff2) format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "STIX Two Text"; font-style: italic; font-weight: 400; font-display: swap; src: url(fonts/stix-two-text-latin-400-italic.woff2) format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "STIX Two Text"; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/stix-two-text-greek-400-normal.woff2) format("woff2"); unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF; }
+@font-face { font-family: "STIX Two Text"; font-style: italic; font-weight: 400; font-display: swap; src: url(fonts/stix-two-text-greek-400-italic.woff2) format("woff2"); unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF; }
+@font-face { font-family: "STIX Two Text"; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/stix-two-text-cyrillic-400-normal.woff2) format("woff2"); unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family: "STIX Two Text"; font-style: italic; font-weight: 400; font-display: swap; src: url(fonts/stix-two-text-cyrillic-400-italic.woff2) format("woff2"); unicode-range: U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+
+* { box-sizing: border-box; }
+body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: var(--fg);
+  font-family: var(--f-body);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 10; background: var(--bg);
+}
+a { color: var(--ink); text-underline-offset: 3px; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2.5px solid var(--mark); outline-offset: 2px; border-radius: 6px; }
+
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.view { display: flex; flex-direction: column; gap: 26px; }
+
+/* Типографика */
+.eyebrow, .mono-label {
+  font-family: var(--f-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+h1 {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 11vw, 3.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+.h-sec { font-family: var(--f-display); font-weight: 700; font-size: 1.55rem; line-height: 1.15; }
+p { margin: 0; }
+.nowrap { white-space: nowrap; }
+.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+
+/* Шапка */
+.hero { display: flex; flex-direction: column; gap: 10px; padding-top: 6px; }
+.hero h1 .ink { color: var(--ink); }
+.dedication { font-family: var(--f-display); font-style: italic; font-size: 1.2rem; color: var(--muted); max-width: 30ch; }
+.memorial {
+  font-size: 0.98rem; color: var(--fg);
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  padding-block: 10px; margin-top: 4px;
+}
+.memorial strong { color: var(--mark); font-weight: 600; }
+.intro { font-size: 1.06rem; max-width: 62ch; }
+
+/* Листы */
+.sheet {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 18px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.sheet-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.hint { font-size: 0.88rem; color: var(--muted); }
+
+/* Карта */
+.mapbox { margin-inline: -6px; }
+.mapbox svg { display: block; width: 100%; height: auto; max-width: 100%; touch-action: manipulation; }
+.map-cap { font-size: 0.88rem; color: var(--muted); }
+.m-land { fill: var(--land); }
+.m-grid { stroke: var(--line); stroke-width: 0.6; stroke-dasharray: 2 3; }
+.m-gridlbl { font-family: var(--f-mono); font-size: 7.5px; fill: var(--muted); }
+.m-river { fill: none; stroke: var(--river); stroke-width: 15; stroke-linecap: round; stroke-linejoin: round; }
+.m-riverlbl { font-family: var(--f-display); font-style: italic; font-size: 11px; fill: var(--muted); }
+.m-stadium { fill: none; stroke: var(--muted); stroke-width: 0.9; }
+.m-path { fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.m-path.done { stroke-opacity: 0.45; }
+.m-cable { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-dasharray: 0.1 4.2; stroke-linecap: round; }
+.m-cablelbl { font-family: var(--f-mono); font-size: 7.5px; fill: var(--ink); }
+.m-stop circle { fill: var(--surface); stroke: var(--ink); stroke-width: 2; }
+.m-stop text.n { font-family: var(--f-body); font-weight: 650; font-size: 10.5px; fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+.m-stop.visited circle { fill: var(--ink); }
+.m-stop.visited text.n { fill: var(--on-ink); }
+.m-stop.current circle { stroke: var(--mark); stroke-width: 3; }
+.m-stop text.lbl, .m-halo {
+  font-family: var(--f-body); font-weight: 600; font-size: 10.5px; fill: var(--fg);
+  paint-order: stroke; stroke: var(--land); stroke-width: 3.2px; stroke-linejoin: round;
+}
+.m-stop { cursor: pointer; }
+.m-me-acc { fill: var(--mark); fill-opacity: 0.14; stroke: var(--mark); stroke-opacity: 0.35; stroke-width: 0.8; }
+.m-me { fill: var(--mark); stroke: var(--surface); stroke-width: 2; }
+.m-north text { font-family: var(--f-mono); font-size: 8px; fill: var(--muted); text-anchor: middle; }
+.m-north path, .m-scale line { stroke: var(--muted); stroke-width: 1; fill: none; }
+.m-north path.fill { fill: var(--muted); stroke: none; }
+.m-scale text { font-family: var(--f-mono); font-size: 7.5px; fill: var(--muted); }
+
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 0; }
+.stats div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.stats dt { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.stats dd { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 1.35rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+@media (max-width: 420px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 12px; } }
+.links-row { font-size: 0.92rem; display: flex; flex-wrap: wrap; gap: 6px 14px; }
+
+/* Кнопки */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 10px 18px;
+  border-radius: 12px; border: 1.5px solid var(--ink);
+  background: transparent; color: var(--ink);
+  font-weight: 600; font-size: 1rem; line-height: 1.2;
+  text-decoration: none; cursor: pointer;
+  transition: transform .12s ease, background-color .15s ease;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--ink); color: var(--on-ink); min-height: 58px; font-size: 1.1rem; width: 100%; }
+.btn-secondary:hover { background: var(--ink-soft); }
+.btn-sm { min-height: 42px; padding: 8px 14px; font-size: 0.94rem; }
+.btn-ghost { border-color: transparent; padding-inline: 8px; }
+.btn-link {
+  background: none; border: 0; padding: 8px 2px; color: var(--ink); font-weight: 600; cursor: pointer;
+  min-height: 44px;
+}
+.btn-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn-row > .btn { flex: 1 1 140px; }
+.cta { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
+.cta .sub { font-size: 0.9rem; color: var(--muted); text-align: center; }
+.reset { display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.92rem; color: var(--muted); }
+
+/* Список точек */
+.route { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; }
+.route li { display: flex; flex-direction: column; }
+.r-item {
+  display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 12px; align-items: center;
+  width: 100%; text-align: left; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 12px; padding: 12px; cursor: pointer;
+}
+.r-item:hover { border-color: var(--ink); }
+.r-num {
+  width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--ink);
+  display: grid; place-items: center; font-weight: 650; color: var(--ink); font-variant-numeric: tabular-nums;
+}
+.visited .r-num { background: var(--ink); color: var(--on-ink); }
+.current .r-num { border-color: var(--mark); box-shadow: 0 0 0 3px color-mix(in srgb, var(--mark) 22%, transparent); }
+.r-title { font-weight: 600; line-height: 1.25; display: block; }
+.r-addr { font-size: 0.86rem; color: var(--muted); display: block; }
+.r-state { font-family: var(--f-mono); font-size: 0.74rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; }
+.visited .r-state { color: var(--ok); }
+.r-leg {
+  margin-left: 18px; padding: 8px 0 8px 31px; border-left: 2px dotted var(--ink);
+  font-family: var(--f-mono); font-size: 0.8rem; color: var(--muted);
+}
+
+/* Офлайн */
+.offline { display: flex; flex-direction: column; gap: 10px; }
+.bar { height: 8px; border-radius: 999px; background: var(--ink-soft); overflow: hidden; }
+.bar span { display: block; height: 100%; width: 0; background: var(--ink); transition: width .2s ease; }
+.status { font-size: 0.94rem; }
+.status.ok { color: var(--ok); font-weight: 600; }
+.status .num { font-size: 0.86rem; color: var(--muted); font-weight: 400; }
+
+/* QR */
+.share-grid { display: grid; grid-template-columns: 148px minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 400px) { .share-grid { grid-template-columns: 1fr; } .qr { width: 180px; } }
+.qr { background: #FFFFFF; border-radius: 10px; padding: 8px; width: 148px; aspect-ratio: 1; max-width: 100%; border: 1px solid var(--line); }
+.qr svg { display: block; width: 100%; height: 100%; }
+.share-side { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.url { font-family: var(--f-mono); font-size: 0.84rem; word-break: break-all; color: var(--fg); margin: 0; }
+
+.notice {
+  border: 1.5px dashed var(--mark); border-radius: 12px; padding: 12px 14px;
+  font-size: 0.95rem; background: color-mix(in srgb, var(--mark) 7%, var(--surface));
+}
+.notice b { color: var(--mark); }
+.preview-note { font-size: 0.92rem; color: var(--muted); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: var(--surface); }
+
+.foot { font-size: 0.84rem; color: var(--muted); display: flex; flex-direction: column; gap: 6px; padding-top: 8px; border-top: 1px solid var(--line); }
+
+/* Прогулка */
+.walkbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg);
+  display: flex; flex-direction: column; gap: 8px;
+  padding-block: 6px 10px; margin-top: -12px;
+  border-bottom: 1px solid var(--line);
+}
+.walkbar-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.segments { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+.segments button {
+  height: 22px; border: 0; padding: 0; background: none; cursor: pointer; display: flex; align-items: center;
+}
+.segments button span { display: block; width: 100%; height: 5px; border-radius: 3px; background: var(--line); }
+.segments button.visited span { background: var(--ink); }
+.segments button.current span { background: var(--mark); height: 7px; }
+
+.stop { display: flex; flex-direction: column; gap: 18px; }
+.art {
+  margin: 0; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden;
+  background-color: var(--land);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--ink) 9%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--ink) 9%, transparent) 1px, transparent 1px);
+  background-size: 11px 11px;
+}
+.art svg { display: block; width: 100%; height: auto; }
+.art img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
+.art figcaption { font-size: 0.78rem; color: var(--muted); padding: 6px 10px; background: var(--surface); border-top: 1px solid var(--line); }
+.a-l { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round; }
+.a-f { fill: var(--surface); stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; }
+.a-t { fill: none; stroke: var(--ink); stroke-width: 0.6; stroke-opacity: 0.55; }
+.a-t2 { fill: none; stroke: var(--ink); stroke-width: 0.5; stroke-opacity: 0.28; }
+.a-d { fill: none; stroke: var(--mark); stroke-width: 0.9; }
+.a-g { fill: none; stroke: var(--gold); stroke-width: 1.3; stroke-linejoin: round; }
+.a-w { fill: none; stroke: var(--mark); stroke-width: 1.2; stroke-linejoin: round; stroke-linecap: round; }
+.a-dot { fill: var(--mark); }
+.a-star { fill: var(--mark); }
+.a-water { fill: var(--river); }
+.a-hill { fill: var(--surface); stroke: var(--ink); stroke-width: 1.4; }
+.a-tx { font-family: var(--f-mono); font-size: 8.5px; fill: var(--muted); }
+.a-dtx { font-family: var(--f-mono); font-size: 8.5px; fill: var(--mark); }
+.a-m { font-family: var(--f-math); font-style: italic; font-size: 13px; fill: var(--ink); }
+
+.stop-head { display: flex; flex-direction: column; gap: 6px; }
+.stop-head h2 { font-family: var(--f-display); font-weight: 700; font-size: clamp(1.75rem, 7vw, 2.2rem); line-height: 1.08; }
+.stop-head .nick { font-family: var(--f-display); font-style: italic; color: var(--muted); font-size: 1.12rem; }
+.addr { font-size: 0.94rem; color: var(--muted); }
+
+.geo {
+  display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; align-items: center;
+  border: 1px solid var(--line); border-radius: 12px; padding: 12px; background: var(--surface);
+}
+.geo.wide { grid-template-columns: 1fr; }
+.arrow {
+  width: 52px; height: 52px; border-radius: 50%; border: 1.5px solid var(--ink);
+  display: grid; place-items: center; color: var(--ink);
+}
+.arrow svg { width: 26px; height: 26px; transition: transform .4s ease; }
+.geo-dist { font-family: var(--f-body); font-weight: 600; font-size: 1.75rem; line-height: 1.05; font-variant-numeric: tabular-nums; color: var(--fg); }
+.geo-dist.word { font-family: var(--f-display); font-weight: 700; font-size: 1.6rem; }
+.geo-sub { font-size: 0.88rem; color: var(--muted); }
+.geo.here { border-color: var(--ok); }
+.geo.here .arrow { border-color: var(--ok); color: var(--ok); }
+.chip {
+  display: inline-block; font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: .05em; text-transform: uppercase;
+  border-radius: 999px; padding: 3px 9px; border: 1px solid currentColor;
+}
+.chip.ok { color: var(--ok); }
+.chip.draft { color: var(--muted); border-style: dashed; }
+.here-links { font-size: 0.88rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+
+.lead { font-family: var(--f-display); font-size: 1.32rem; line-height: 1.35; }
+.text { display: flex; flex-direction: column; gap: 12px; max-width: 64ch; }
+.listen { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.listen audio { width: 100%; max-width: 100%; }
+
+.formula {
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  padding-block: 16px; display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center;
+}
+.formula .f {
+  font-family: var(--f-math); font-size: clamp(1.25rem, 5.6vw, 1.6rem); color: var(--ink); line-height: 1.4;
+  max-width: 100%; overflow-x: auto; padding-block: 2px;
+}
+.formula .f i { font-style: italic; }
+.formula p { font-size: 0.92rem; color: var(--muted); max-width: 52ch; }
+.practical { font-size: 0.94rem; color: var(--fg); padding-left: 12px; border-left: 2px solid var(--line); }
+
+.next { display: flex; flex-direction: column; gap: 10px; }
+.next h3 { font-family: var(--f-body); font-weight: 650; font-size: 1.12rem; }
+.next .meta { font-family: var(--f-mono); font-size: 0.84rem; color: var(--muted); }
+.pager { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 10px; padding-top: 4px; }
+.pager .btn-primary { min-height: 54px; }
+.pager .solo { grid-column: 1 / -1; }
+
+.finish { display: flex; flex-direction: column; gap: 16px; text-align: left; }
+.finish .big { font-family: var(--f-display); font-weight: 700; font-size: clamp(2rem, 9vw, 2.8rem); line-height: 1.05; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+<!--ARTIFACT-STYLE-END-->
+</head>
+<body>
+<!--ARTIFACT-BODY-START-->
+<div class="wrap">
+
+  <main id="home" class="view">
+    <header class="hero">
+      <p class="eyebrow">Математическая прогулка по Москве</p>
+      <h1>Прогулка <span class="ink">Колмогорова</span></h1>
+      <p class="dedication">Памяти Андрея Николаевича Колмогорова, <span class="nowrap">1903–1987</span></p>
+      <p class="memorial" id="memorial" hidden></p>
+    </header>
+
+    <p class="preview-note" id="previewNote" hidden>Это превью. Геолокация, сохранение для офлайна и QR-код включаются, когда сайт открыт по собственному адресу (https).</p>
+
+    <section class="sheet" aria-labelledby="mapTitle">
+      <div class="sheet-head">
+        <h2 id="mapTitle" class="h-sec">Маршрут</h2>
+        <span class="mono-label">схема</span>
+      </div>
+      <div class="mapbox" id="mapBox"></div>
+      <p class="map-cap" id="mapCap">Пунктир — канатная дорога. Нажмите на номер точки, чтобы открыть её.</p>
+      <dl class="stats" id="stats"></dl>
+      <p class="links-row"><a id="fullYa" href="#" target="_blank" rel="noopener">Весь маршрут в Яндекс Картах</a><a id="fullGo" href="#" target="_blank" rel="noopener">в Google Картах</a></p>
+    </section>
+
+    <p class="intro" id="intro"></p>
+    <div class="notice" id="homeNotice" hidden></div>
+
+    <div class="cta">
+      <button id="startBtn" class="btn btn-primary" type="button">Начать прогулку</button>
+      <p class="sub" id="startSub">Сайт спросит разрешение на геолокацию, чтобы показывать расстояние до точки.</p>
+      <div id="resetBox" class="reset"></div>
+    </div>
+
+    <section aria-labelledby="routeTitle">
+      <h2 id="routeTitle" class="h-sec">Точки</h2>
+      <ol class="route" id="routeList"></ol>
+    </section>
+
+    <section class="sheet" aria-labelledby="offTitle">
+      <h2 id="offTitle" class="h-sec">Перед выходом из дома</h2>
+      <p>Откройте сайт по Wi‑Fi и сохраните прогулку: тексты, чертежи, шрифты и аудио останутся в телефоне, и на маршруте мобильный интернет не понадобится. Яндекс и Google Карты по кнопкам «Как дойти» работают отдельно — им нужна сеть или заранее скачанная карта Москвы.</p>
+      <div class="offline">
+        <button id="offBtn" class="btn btn-secondary" type="button">Сохранить для офлайна</button>
+        <div class="bar" id="offBar" hidden><span></span></div>
+        <p class="status" id="offStatus" role="status"></p>
+      </div>
+      <p class="hint">На iPhone добавьте сайт на экран «Домой» (Поделиться → «На экран Домой») — так сохранённые файлы хранятся надёжнее.</p>
+    </section>
+
+    <section class="sheet" aria-labelledby="shareTitle">
+      <h2 id="shareTitle" class="h-sec">Поделиться прогулкой</h2>
+      <div class="share-grid">
+        <div class="qr" id="qr" role="img" aria-label="QR-код со ссылкой на прогулку"></div>
+        <div class="share-side">
+          <p class="url" id="shareUrl"></p>
+          <div class="btn-row">
+            <button id="copyBtn" class="btn btn-secondary btn-sm" type="button">Скопировать ссылку</button>
+            <button id="shareBtn" class="btn btn-secondary btn-sm" type="button" hidden>Поделиться…</button>
+          </div>
+          <button id="qrPngBtn" class="btn btn-link" type="button" hidden>Скачать QR-код картинкой</button>
+          <p class="hint" id="qrHint">Наведите камеру телефона на код — откроется эта прогулка.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <p>Тексты точек — черновик: полные рассказы о математиках появятся позже.</p>
+      <p>Карта — схема с приблизительными путями; точный пеший маршрут строят Яндекс и Google Карты.</p>
+    </footer>
+  </main>
+
+  <main id="walk" class="view" hidden>
+    <div class="walkbar">
+      <div class="walkbar-row">
+        <button id="toHome" class="btn-link" type="button">← Обзор</button>
+        <span class="mono-label" id="counter"></span>
+      </div>
+      <div class="segments" id="segments" aria-label="Прогресс прогулки"></div>
+    </div>
+    <article id="card" class="stop"></article>
+  </main>
+
+</div>
+<!--ARTIFACT-SCRIPTS-START-->
+<script src="tour-data.js"></script>
+<script src="vendor/qrcode.js"></script>
+<!--ARTIFACT-SCRIPTS-END-->
+<script>
+(function () {
+  "use strict";
+  var T = window.TOUR;
+  var PREVIEW = !!window.__PREVIEW__;
+  var KEY = "kolmogorov-walk:progress";
+  var CACHE = "kolmogorov-walk-" + T.version;
+  var N = T.stops.length;
+  var NB = " ";
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  /* ---------- Прогресс ---------- */
+  function load() {
+    try {
+      var p = JSON.parse(localStorage.getItem(KEY) || "null");
+      if (p && typeof p.cur === "number") return { cur: Math.min(Math.max(p.cur, 0), N - 1), visited: p.visited || [], started: p.started || null, finished: p.finished || null };
+    } catch (e) {}
+    return { cur: 0, visited: [], started: null, finished: null };
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(prog)); } catch (e) {} }
+  var prog = load();
+  function isVisited(i) { return prog.visited.indexOf(T.stops[i].id) !== -1; }
+  function markVisited(i) { if (!isVisited(i)) { prog.visited.push(T.stops[i].id); save(); } }
+
+  /* ---------- Геометрия ---------- */
+  var R = 6371008.8, rad = Math.PI / 180;
+  function dist(a, b) {
+    var dLat = (b[0] - a[0]) * rad, dLon = (b[1] - a[1]) * rad;
+    var h = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+  function bearing(a, b) {
+    var y = Math.sin((b[1] - a[1]) * rad) * Math.cos(b[0] * rad);
+    var x = Math.cos(a[0] * rad) * Math.sin(b[0] * rad) - Math.sin(a[0] * rad) * Math.cos(b[0] * rad) * Math.cos((b[1] - a[1]) * rad);
+    return (Math.atan2(y, x) / rad + 360) % 360;
+  }
+  function pathLen(p) { var s = 0; for (var i = 1; i < p.length; i++) s += dist(p[i - 1], p[i]); return s; }
+  var WIND = ["север", "северо-восток", "восток", "юго-восток", "юг", "юго-запад", "запад", "северо-запад"];
+  function windName(b) { return WIND[Math.round(b / 45) % 8]; }
+  var CABLE_M = 720;
+  var legWalk = T.legs.map(function (l) { return pathLen(l.path); });
+  var totalWalk = legWalk.reduce(function (a, b) { return a + b; }, 0);
+  var totalM = totalWalk + CABLE_M;
+
+  function fmtDist(m) {
+    if (m < 950) return (Math.round(m / 10) * 10) + NB + "м";
+    return (m / 1000).toFixed(1).replace(".", ",") + NB + "км";
+  }
+  function walkMin(m) { return Math.max(5, Math.round(m / 75 / 5) * 5); } /* 4,5 км/ч */
+  function fmtDuration(min) {
+    var h = Math.floor(min / 60), m = min % 60;
+    if (!h) return m + NB + "мин";
+    return h + NB + "ч" + (m ? " " + m + NB + "мин" : "");
+  }
+  function plural(n, a, b, c) {
+    var n10 = n % 10, n100 = n % 100;
+    if (n10 === 1 && n100 !== 11) return a;
+    if (n10 >= 2 && n10 <= 4 && (n100 < 10 || n100 >= 20)) return b;
+    return c;
+  }
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  function activeNotices(s) {
+    var t = todayISO();
+    return (s.notices || []).filter(function (n) { return t >= n.from && t <= n.to; });
+  }
+
+  /* ---------- Ссылки в карты ---------- */
+  function ll(p) { return p[0].toFixed(5) + "," + p[1].toFixed(5); }
+  function yaRoute(from, to) {
+    return "https://yandex.ru/maps/?rtext=" + (from ? ll(from) : "") + "~" + ll(to) + "&rtt=pd";
+  }
+  function goRoute(from, to) {
+    return "https://www.google.com/maps/dir/?api=1" + (from ? "&origin=" + ll(from) : "") + "&destination=" + ll(to) + "&travelmode=walking";
+  }
+  function pt(s) { return [s.lat, s.lon]; }
+
+  /* ---------- Карта-схема ---------- */
+  var M = (function () {
+    var pts = [];
+    T.stops.forEach(function (s) { pts.push(pt(s)); });
+    T.legs.forEach(function (l) { pts = pts.concat(l.path); if (l.cable) pts = pts.concat(l.cable); });
+    var latMin = Infinity, latMax = -Infinity, lonMin = Infinity, lonMax = -Infinity;
+    pts.forEach(function (p) {
+      latMin = Math.min(latMin, p[0]); latMax = Math.max(latMax, p[0]);
+      lonMin = Math.min(lonMin, p[1]); lonMax = Math.max(lonMax, p[1]);
+    });
+    var padM = 300, lat0 = (latMin + latMax) / 2;
+    var kx = Math.cos(lat0 * rad) * 111320 / 10, ky = 110574 / 10;
+    latMax += padM / 110574; latMin -= padM / 110574;
+    var dLon = padM / (Math.cos(lat0 * rad) * 111320);
+    lonMin -= dLon; lonMax += dLon;
+    return {
+      latMin: latMin, latMax: latMax, lonMin: lonMin, lonMax: lonMax,
+      W: (lonMax - lonMin) * kx, H: (latMax - latMin) * ky,
+      x: function (lon) { return (lon - lonMin) * kx; },
+      y: function (lat) { return (latMax - lat) * ky; },
+      k: kx
+    };
+  })();
+  function P(p) { return M.x(p[1]).toFixed(1) + "," + M.y(p[0]).toFixed(1); }
+  function poly(p) { return p.map(P).join(" "); }
+
+  function mapSVG() {
+    var W = M.W.toFixed(1), H = M.H.toFixed(1), o = [];
+    o.push('<svg viewBox="0 0 ' + W + " " + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Схема маршрута: пять точек от здания РАН до Новодевичьего кладбища">');
+    o.push('<defs><clipPath id="mclip"><rect width="' + W + '" height="' + H + '" rx="10"/></clipPath></defs>');
+    o.push('<g clip-path="url(#mclip)">');
+    o.push('<rect class="m-land" width="' + W + '" height="' + H + '"/>');
+    // координатная сетка
+    var g = [];
+    for (var la = Math.ceil(M.latMin * 100) / 100; la < M.latMax; la += 0.01) {
+      var y = M.y(la).toFixed(1);
+      g.push('<line class="m-grid" x1="0" x2="' + W + '" y1="' + y + '" y2="' + y + '"/>');
+      g.push('<text class="m-gridlbl" x="4" y="' + (y - 3) + '">' + la.toFixed(2).replace(".", ",") + '°</text>');
+    }
+    for (var lo = Math.ceil(M.lonMin * 100) / 100; lo < M.lonMax; lo += 0.01) {
+      var x = M.x(lo).toFixed(1);
+      g.push('<line class="m-grid" y1="0" y2="' + H + '" x1="' + x + '" x2="' + x + '"/>');
+      g.push('<text class="m-gridlbl" x="' + (+x + 3) + '" y="' + (H - 5) + '">' + lo.toFixed(2).replace(".", ",") + '°</text>');
+    }
+    o.push(g.join(""));
+    o.push('<polyline class="m-river" points="' + poly(T.river) + '"/>');
+    // стадион
+    var st = T.stadium, sx = M.x(st.lon), sy = M.y(st.lat);
+    o.push('<ellipse class="m-stadium" cx="' + sx.toFixed(1) + '" cy="' + sy.toFixed(1) + '" rx="' + (st.rx / 10) + '" ry="' + (st.ry / 10) + '"/>');
+    o.push('<ellipse class="m-stadium" cx="' + sx.toFixed(1) + '" cy="' + sy.toFixed(1) + '" rx="' + (st.rx / 10 * 0.62) + '" ry="' + (st.ry / 10 * 0.7) + '"/>');
+    o.push('<text class="m-halo" style="font-size:8.5px;font-weight:500;fill:var(--muted)" x="' + (sx + st.rx / 10 + 4).toFixed(1) + '" y="' + (sy + 3).toFixed(1) + '">Лужники</text>');
+    // подписи местности
+    var rv = [55.7232, 37.5862];
+    o.push('<text class="m-riverlbl" transform="translate(' + P(rv) + ') rotate(-50)">Москва-река</text>');
+    var vg = [55.7050, 37.5392];
+    o.push('<text class="m-riverlbl" transform="translate(' + P(vg) + ') rotate(-15)">Воробьёвы горы</text>');
+    // пути
+    T.legs.forEach(function (l, i) {
+      var done = isVisited(i + 1) ? " done" : "";
+      if (l.cable) {
+        o.push('<polyline class="m-cable" points="' + poly(l.cable) + '"/>');
+        var c0 = l.cable[0], c1 = l.cable[1];
+        var mx = (M.x(c0[1]) + M.x(c1[1])) / 2, my = (M.y(c0[0]) + M.y(c1[0])) / 2;
+        o.push('<rect x="' + (mx - 3.5).toFixed(1) + '" y="' + (my - 3).toFixed(1) + '" width="7" height="6" rx="1.5" fill="var(--ink)"/>');
+      }
+      o.push('<polyline class="m-path' + done + '" points="' + poly(l.path) + '"/>');
+    });
+    // компас и масштаб
+    var nx = M.W - 18, ny = 20;
+    o.push('<g class="m-north"><path class="fill" d="M' + nx + "," + (ny - 9) + " l4,11 l-4,-3 l-4,3 z" + '"/><text x="' + nx + '" y="' + (ny + 12) + '">С</text></g>');
+    var sx0 = 12, sy0 = M.H - 22;
+    o.push('<g class="m-scale"><line x1="' + sx0 + '" x2="' + (sx0 + 50) + '" y1="' + sy0 + '" y2="' + sy0 + '"/><line x1="' + sx0 + '" x2="' + sx0 + '" y1="' + (sy0 - 3) + '" y2="' + (sy0 + 3) + '"/><line x1="' + (sx0 + 50) + '" x2="' + (sx0 + 50) + '" y1="' + (sy0 - 3) + '" y2="' + (sy0 + 3) + '"/><text x="' + (sx0 + 55) + '" y="' + (sy0 + 3) + '">500 м</text></g>');
+    // я
+    o.push('<g id="meLayer"></g>');
+    // точки
+    T.stops.forEach(function (s, i) {
+      var x = M.x(s.lon), y = M.y(s.lat);
+      var cls = "m-stop" + (isVisited(i) ? " visited" : "") + (prog.started && !prog.finished && prog.cur === i ? " current" : "");
+      var lx = x + 14, ly = y + 4, anchor = "start";
+      if (s.label === "l") { lx = x - 14; anchor = "end"; }
+      if (s.label === "t") { lx = x; ly = y - 15; anchor = "middle"; }
+      if (s.label === "b") { lx = x; ly = y + 23; anchor = "middle"; }
+      o.push('<g class="' + cls + '" data-i="' + i + '" tabindex="0" role="button" aria-label="Точка ' + (i + 1) + ": " + esc(s.title) + '">' +
+        '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="10"/>' +
+        '<text class="n" x="' + x.toFixed(1) + '" y="' + (y + 0.5).toFixed(1) + '">' + (i + 1) + "</text>" +
+        '<text class="lbl" x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="' + anchor + '">' + esc(s.short) + "</text></g>");
+    });
+    o.push("</g></svg>");
+    return o.join("");
+  }
+  function renderMap() {
+    $("mapBox").innerHTML = mapSVG();
+    $("mapBox").querySelectorAll(".m-stop").forEach(function (g) {
+      function go() { openStop(+g.getAttribute("data-i")); }
+      g.addEventListener("click", go);
+      g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    });
+    updateMe();
+  }
+  function updateMe() {
+    var layer = document.getElementById("meLayer");
+    var cap = $("mapCap");
+    if (!layer) return;
+    if (!pos) { layer.innerHTML = ""; cap.textContent = "Пунктир — канатная дорога. Нажмите на номер точки, чтобы открыть её."; return; }
+    var inside = pos.lat > M.latMin && pos.lat < M.latMax && pos.lon > M.lonMin && pos.lon < M.lonMax;
+    var d1 = dist([pos.lat, pos.lon], pt(T.stops[0]));
+    if (inside) {
+      var x = M.x(pos.lon), y = M.y(pos.lat), r = Math.min(Math.max(pos.acc / 10, 3), 60);
+      layer.innerHTML = '<circle class="m-me-acc" cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + r.toFixed(1) + '"/><circle class="m-me" cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="5"/>';
+      cap.textContent = "Красная точка — вы. До старта " + fmtDist(d1) + ".";
+    } else {
+      layer.innerHTML = "";
+      cap.textContent = "Вы за пределами схемы: до старта " + fmtDist(d1) + " (" + windName(bearing([pos.lat, pos.lon], pt(T.stops[0]))) + ").";
+    }
+  }
+
+  /* ---------- Чертежи точек ---------- */
+  function line(x1, y1, x2, y2, c) { return '<line class="' + c + '" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '"/>'; }
+  function rect(x, y, w, h, c) { return '<rect class="' + c + '" x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '"/>'; }
+  function ground(y) {
+    var o = line(8, y, 312, y, "a-l");
+    for (var x = 14; x <= 312; x += 9) o += line(x, y, x - 6, y + 7, "a-t");
+    return o;
+  }
+  function dimV(x, y1, y2, label) {
+    return line(x, y1, x, y2, "a-d") + line(x - 4, y1, x + 4, y1, "a-d") + line(x - 4, y2, x + 4, y2, "a-d") +
+      '<path class="a-d" d="M' + (x - 2.5) + "," + (y1 + 6) + " L" + x + "," + y1 + " L" + (x + 2.5) + "," + (y1 + 6) + " M" + (x - 2.5) + "," + (y2 - 6) + " L" + x + "," + y2 + " L" + (x + 2.5) + "," + (y2 - 6) + '"/>' +
+      '<text class="a-dtx" text-anchor="middle" transform="translate(' + (x + 11) + "," + ((y1 + y2) / 2) + ') rotate(-90)">' + label + "</text>";
+  }
+  function dimH(x1, x2, y, label) {
+    return line(x1, y, x2, y, "a-d") + line(x1, y - 4, x1, y + 4, "a-d") + line(x2, y - 4, x2, y + 4, "a-d") +
+      '<path class="a-d" d="M' + (x1 + 6) + "," + (y - 2.5) + " L" + x1 + "," + y + " L" + (x1 + 6) + "," + (y + 2.5) + " M" + (x2 - 6) + "," + (y - 2.5) + " L" + x2 + "," + y + " L" + (x2 - 6) + "," + (y + 2.5) + '"/>' +
+      '<text class="a-dtx" text-anchor="middle" x="' + ((x1 + x2) / 2) + '" y="' + (y - 5) + '">' + label + "</text>";
+  }
+  function onion(cx, base, w, h, cls) {
+    return '<path class="' + (cls || "a-f") + '" d="M' + (cx - w / 2) + "," + base +
+      " C" + (cx - w / 2 - w * 0.12) + "," + (base - h * 0.5) + " " + (cx - w * 0.06) + "," + (base - h * 0.62) + " " + cx + "," + (base - h) +
+      " C" + (cx + w * 0.06) + "," + (base - h * 0.62) + " " + (cx + w / 2 + w * 0.12) + "," + (base - h * 0.5) + " " + (cx + w / 2) + "," + base + ' Z"/>';
+  }
+  function cross(cx, top) { return line(cx, top, cx, top - 9, "a-l") + line(cx - 3, top - 6, cx + 3, top - 6, "a-l"); }
+  function svgWrap(inner, label) {
+    return '<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' + esc(label) + '">' + inner + "</svg>";
+  }
+  function catenary(x1, y1, x2, y2, a) {
+    function f(m) { return a * (Math.cosh((x2 - m) / a) - Math.cosh((x1 - m) / a)); }
+    var target = y1 - y2, lo = x1 - 20 * a, hi = x2 + 20 * a;
+    for (var k = 0; k < 80; k++) { var mid = (lo + hi) / 2; if (f(mid) > target) lo = mid; else hi = mid; }
+    var m = (lo + hi) / 2, yv = y1 + a * (Math.cosh((x1 - m) / a) - 1);
+    var Y = function (x) { return yv - a * (Math.cosh((x - m) / a) - 1); };
+    var d = "";
+    for (var i = 0; i <= 40; i++) { var x = x1 + (x2 - x1) * i / 40; d += (i ? " L" : "M") + x.toFixed(1) + "," + Y(x).toFixed(1); }
+    return { d: d, Y: Y };
+  }
+
+  var ART = {
+    ran: function () {
+      var o = ground(182);
+      o += rect(52, 150, 216, 32, "a-f");
+      for (var x = 62; x < 262; x += 12) o += line(x, 155, x, 182, "a-t");
+      o += rect(104, 52, 56, 98, "a-f") + rect(160, 52, 56, 98, "a-f");
+      for (var i = 1; i < 22; i++) { var y = (52 + i * 98 / 22).toFixed(1); o += line(104, y, 216, y, "a-t"); }
+      for (x = 111; x < 216; x += 7) o += line(x, 52, x, 150, "a-t2");
+      // «золотые мозги»
+      o += rect(100, 44, 120, 8, "a-g");
+      var zz = "", zz2 = "";
+      for (x = 100, i = 0; x <= 220; x += 10, i++) { zz += (i ? " L" : "M") + x + "," + (i % 2 ? 18 : 44); zz2 += (i ? " L" : "M") + x + "," + (i % 2 ? 44 : 26); }
+      o += '<path class="a-g" d="' + zz + '"/><path class="a-g" d="' + zz2 + '"/>';
+      for (x = 100; x <= 220; x += 20) o += line(x, 44, x, 16, "a-g");
+      o += line(100, 16, 220, 16, "a-g");
+      o += dimV(240, 52, 150, "22 эт.");
+      o += '<text class="a-tx" x="312" y="11" text-anchor="end">Ленинский пр., 32А · фасад</text>';
+      return svgWrap(o, "Чертёж здания Президиума РАН с «золотыми мозгами» на крыше");
+    },
+    mian: function () {
+      var o = ground(182);
+      o += rect(36, 72, 248, 4, "a-f") + rect(36, 76, 248, 106, "a-f");
+      for (var i = 1; i < 9; i++) { var y = (76 + i * 106 / 9).toFixed(1); o += line(36, y, 284, y, "a-t"); }
+      for (var x = 48; x < 284; x += 13) o += line(x, 76, x, 182, "a-t2");
+      o += rect(148, 160, 24, 22, "a-f") + line(160, 160, 160, 182, "a-t");
+      var s = 20260420, rnd = function () { s = (s * 16807) % 2147483647; return s / 2147483647; };
+      var d = "M36,46", yy = 46;
+      for (x = 36 + 6.2; x <= 284.5; x += 6.2) { yy += rnd() < 0.5 ? -6 : 6; yy = Math.max(16, Math.min(62, yy)); d += " L" + x.toFixed(1) + "," + yy; }
+      o += '<path class="a-w" d="' + d + '"/><circle class="a-dot" cx="36" cy="46" r="2.6"/><circle class="a-dot" cx="284" cy="' + yy + '" r="2.6"/>';
+      o += '<text class="a-tx" x="40" y="12">случайное блуждание, 40 шагов</text>';
+      o += dimV(20, 76, 182, "9 эт.");
+      return svgWrap(o, "Чертёж девятиэтажного здания МИАН и случайное блуждание над ним");
+    },
+    msu: function () {
+      var o = ground(185);
+      o += rect(22, 152, 276, 33, "a-f");
+      for (var y = 160; y < 185; y += 8) o += line(22, y, 298, y, "a-t");
+      [50, 236].forEach(function (x) {
+        o += rect(x, 112, 34, 40, "a-f") + rect(x + 6, 100, 22, 12, "a-f") + line(x + 17, 100, x + 17, 84, "a-l");
+        for (var yy = 120; yy < 152; yy += 8) o += line(x, yy, x + 34, yy, "a-t");
+      });
+      o += rect(106, 118, 108, 67, "a-f");
+      for (y = 126; y < 185; y += 7) o += line(106, y, 214, y, "a-t");
+      o += rect(122, 86, 76, 32, "a-f");
+      for (y = 92; y < 118; y += 6) o += line(122, y, 198, y, "a-t");
+      o += rect(133, 62, 54, 24, "a-f");
+      for (y = 68; y < 86; y += 6) o += line(133, y, 187, y, "a-t");
+      o += rect(142, 44, 36, 18, "a-f") + rect(150, 32, 20, 12, "a-f");
+      [122, 198, 133, 187].forEach(function (x, k) { var t = k < 2 ? 86 : 62; o += line(x, t, x, t - 8, "a-l"); });
+      o += '<polygon class="a-f" points="154,32 166,32 160,9"/>';
+      var st = "";
+      for (var k = 0; k < 10; k++) { var r = k % 2 ? 2 : 5, an = -Math.PI / 2 + k * Math.PI / 5; st += (160 + r * Math.cos(an)).toFixed(1) + "," + (6 + r * Math.sin(an)).toFixed(1) + " "; }
+      o += '<polygon class="a-star" points="' + st + '"/>';
+      o += dimV(306, 2, 185, "≈ 240 м");
+      o += '<text class="a-tx" x="14" y="22">Главное здание, 1953</text>';
+      return svgWrap(o, "Чертёж Главного здания МГУ со шпилем и звездой");
+    },
+    kanatka: function () {
+      var o = "";
+      o += '<path class="a-hill" d="M0,58 C40,58 70,66 98,118 C114,150 126,170 142,176 L142,200 L0,200 Z"/>';
+      o += '<rect class="a-water" x="142" y="176" width="96" height="16"/>';
+      for (var x = 148; x < 236; x += 16) o += '<path class="a-t" d="M' + x + ",183 q4,-3 8,0 t8,0" + '"/>';
+      o += line(238, 176, 314, 176, "a-l");
+      for (x = 244; x <= 314; x += 9) o += line(x, 176, x - 6, 183, "a-t");
+      o += rect(28, 42, 34, 16, "a-f") + line(24, 42, 66, 42, "a-l");
+      o += rect(262, 158, 40, 18, "a-f") + line(258, 158, 306, 158, "a-l");
+      o += '<path class="a-l" d="M190,176 L196,104 L202,176 M193,140 L199,140 M191.5,158 L200.5,158"/>' + line(190, 104, 202, 104, "a-l");
+      var c1 = catenary(56, 44, 196, 104, 230), c2 = catenary(196, 104, 268, 160, 230);
+      o += '<path class="a-l" d="' + c1.d + '"/><path class="a-l" d="' + c2.d + '"/>';
+      var gx = 128, gy = c1.Y(gx);
+      o += line(gx, gy, gx, gy + 7, "a-l") + '<rect class="a-f" x="' + (gx - 7) + '" y="' + (gy + 7) + '" width="14" height="11" rx="3"/>' + line(gx - 4, gy + 11, gx + 4, gy + 11, "a-t");
+      o += '<text class="a-m" x="150" y="62"><tspan>y</tspan><tspan font-style="normal"> = </tspan><tspan>a</tspan><tspan font-style="normal"> ch (</tspan><tspan>x</tspan><tspan font-style="normal"> / </tspan><tspan>a</tspan><tspan font-style="normal">)</tspan></text>';
+      o += dimH(45, 282, 24, "720 м");
+      o += '<text class="a-tx" x="148" y="172">Москва-река</text>';
+      return svgWrap(o, "Чертёж канатной дороги: трос между опорами провисает по цепной линии");
+    },
+    novodev: function () {
+      var o = ground(182);
+      o += rect(10, 150, 300, 32, "a-f");
+      for (var x = 32; x < 290; x += 12) o += rect(x, 144, 6, 6, "a-f");
+      [8, 292].forEach(function (x) { o += rect(x, 124, 20, 58, "a-f") + '<polygon class="a-f" points="' + x + ",124 " + (x + 10) + ",106 " + (x + 20) + ',124"/>'; });
+      // собор
+      o += rect(60, 104, 62, 46, "a-f");
+      [[91, 80, 12, 14, 18], [70, 92, 7, 10, 12], [112, 92, 7, 10, 12], [80, 90, 7, 10, 12], [102, 90, 7, 10, 12]].forEach(function (d) {
+        o += rect(d[0] - d[2] / 2, d[1], d[2], 104 - d[1], "a-f") + onion(d[0], d[1], d[2] + 4, d[4]) + cross(d[0], d[1] - d[4]);
+      });
+      for (x = 68; x <= 108; x += 10) o += '<path class="a-t" d="M' + x + ",140 L" + x + ",126 A3,3 0 0 1 " + (x + 6) + ",126 L" + (x + 6) + ',140"/>';
+      // колокольня
+      var tiers = [[192, 112, 40, 38], [196, 86, 32, 26], [200, 64, 24, 22], [203, 46, 18, 18], [206, 36, 12, 10]];
+      tiers.forEach(function (t, k) {
+        o += rect(t[0], t[1], t[2], t[3], "a-f");
+        if (k < 4) {
+          var cx = t[0] + t[2] / 2, w = Math.max(4, t[2] * 0.28), top = t[1] + t[3] * 0.3, bot = t[1] + t[3] - 3;
+          o += '<path class="a-t" d="M' + (cx - w / 2) + "," + bot + " L" + (cx - w / 2) + "," + (top + w / 2) + " A" + (w / 2) + "," + (w / 2) + " 0 0 1 " + (cx + w / 2) + "," + (top + w / 2) + " L" + (cx + w / 2) + "," + bot + '"/>';
+        }
+      });
+      o += onion(212, 36, 15, 17) + cross(212, 19);
+      o += '<text class="a-tx" x="14" y="22">Новодевичий монастырь</text><text class="a-tx" x="14" y="33">основан в 1524 г.</text>';
+      return svgWrap(o, "Чертёж Новодевичьего монастыря: стена, собор и колокольня");
+    }
+  };
+
+  /* ---------- Геолокация ---------- */
+  var pos = null, watchId = null, geoState = PREVIEW ? "preview" : ("geolocation" in navigator ? "off" : "unavailable");
+  function startGeo() {
+    if (geoState === "preview" || geoState === "unavailable" || watchId !== null) return;
+    geoState = "asking"; renderGeo();
+    watchId = navigator.geolocation.watchPosition(function (p) {
+      pos = { lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy || 50 };
+      geoState = "on"; onPos();
+    }, function (err) {
+      if (err.code === 1) { geoState = "denied"; navigator.geolocation.clearWatch(watchId); watchId = null; }
+      else if (!pos) geoState = "error";
+      renderGeo();
+    }, { enableHighAccuracy: true, maximumAge: 5000, timeout: 30000 });
+  }
+  function onPos() {
+    updateMe();
+    renderGeo();
+  }
+  function renderGeo() {
+    var box = $("geo");
+    if (!box) return;
+    var s = T.stops[prog.cur];
+    box.className = "geo";
+    if (geoState === "on" && pos) {
+      var d = dist([pos.lat, pos.lon], pt(s)), b = bearing([pos.lat, pos.lon], pt(s));
+      var here = d <= s.radius;
+      if (here) box.className = "geo here";
+      if (here && view === "walk" && !isVisited(prog.cur)) { markVisited(prog.cur); renderSegments(); }
+      box.innerHTML =
+        '<div class="arrow" aria-hidden="true">' + (here
+          ? '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+          : '<svg viewBox="0 0 24 24" style="transform:rotate(' + b.toFixed(0) + 'deg)"><path d="M12 3l6 16-6-4-6 4z" fill="currentColor"/></svg>') + "</div>" +
+        "<div>" + (here
+          ? '<div class="geo-dist word">Вы на месте</div><div class="geo-sub">до точки ' + fmtDist(d) + " · точность ±" + Math.round(pos.acc) + NB + "м</div>"
+          : '<div class="geo-dist">' + fmtDist(d) + '</div><div class="geo-sub">до точки, на ' + windName(b) + " · ≈" + NB + fmtDuration(walkMin(d)) + " · точность ±" + Math.round(pos.acc) + NB + "м</div>") +
+        "</div>";
+      return;
+    }
+    box.className = "geo wide";
+    var msg = {
+      off: '<button class="btn btn-secondary btn-sm" type="button" id="geoBtn">Показать, сколько метров до точки</button>',
+      asking: '<span class="geo-sub">Определяем, где вы…</span>',
+      denied: '<span class="geo-sub">Нет доступа к геолокации. Разрешите его для этого сайта в настройках браузера и обновите страницу.</span>',
+      error: '<span class="geo-sub">Не удаётся определить местоположение. Выйдите на открытое место — GPS поймает спутники.</span>',
+      unavailable: '<span class="geo-sub">Этот браузер не умеет определять местоположение.</span>',
+      preview: '<span class="geo-sub">Расстояние до точки появится, когда сайт открыт по собственному адресу: в превью геолокация отключена.</span>'
+    }[geoState] || "";
+    box.innerHTML = msg;
+    var btn = $("geoBtn");
+    if (btn) btn.addEventListener("click", startGeo);
+  }
+
+  /* ---------- Чтение вслух ---------- */
+  var speaking = false;
+  function stopSpeech() { if ("speechSynthesis" in window) speechSynthesis.cancel(); speaking = false; }
+  function speak(s, btn) {
+    if (!("speechSynthesis" in window)) return;
+    if (speaking) { stopSpeech(); btn.textContent = "▶ Слушать"; return; }
+    var u = new SpeechSynthesisUtterance([s.title, s.lead].concat(s.text).join(". "));
+    u.lang = "ru-RU"; u.rate = 0.98;
+    var v = speechSynthesis.getVoices().filter(function (x) { return /^ru/i.test(x.lang); });
+    if (v.length) u.voice = v.find(function (x) { return x.localService; }) || v[0];
+    u.onend = u.onerror = function () { speaking = false; btn.textContent = "▶ Слушать"; };
+    speechSynthesis.cancel(); speechSynthesis.speak(u); speaking = true; btn.textContent = "■ Остановить";
+  }
+
+  /* ---------- Экраны ---------- */
+  var view = "home";
+  function show(v) {
+    view = v;
+    $("home").hidden = v !== "home";
+    $("walk").hidden = v === "home";
+    stopSpeech();
+    window.scrollTo(0, 0);
+  }
+  function renderHome() {
+    renderMap();
+    var walkTotal = walkMin(totalWalk) + 5 + N * 10;
+    $("stats").innerHTML =
+      "<div><dt>Длина</dt><dd>≈" + NB + fmtDist(totalM) + "</dd></div>" +
+      "<div><dt>Время</dt><dd>≈" + NB + fmtDuration(Math.round(walkTotal / 15) * 15) + "</dd></div>" +
+      "<div><dt>Точек</dt><dd>" + N + "</dd></div>" +
+      "<div><dt>Над рекой</dt><dd>" + CABLE_M + NB + "м</dd></div>";
+    $("intro").textContent = T.intro;
+    var wp = T.stops.map(pt);
+    wp.splice(4, 0, [T.legs[3].from.lat, T.legs[3].from.lon]);
+    $("fullYa").href = "https://yandex.ru/maps/?rtext=" + wp.map(ll).join("~") + "&rtt=pd";
+    $("fullGo").href = "https://www.google.com/maps/dir/?api=1&origin=" + ll(wp[0]) + "&destination=" + ll(wp[wp.length - 1]) + "&waypoints=" + encodeURIComponent(wp.slice(1, -1).map(ll).join("|")) + "&travelmode=walking";
+
+    var notes = [];
+    T.stops.forEach(function (s) { activeNotices(s).forEach(function (n) { notes.push(n.text); }); });
+    $("homeNotice").hidden = !notes.length;
+    $("homeNotice").innerHTML = notes.map(function (t) { return "<b>Сейчас:</b> " + esc(t); }).join("<br>");
+
+    var started = !!prog.started && !prog.finished;
+    $("startBtn").textContent = prog.finished ? "Пройти ещё раз" : started ? "Продолжить: точка " + (prog.cur + 1) + " — " + T.stops[prog.cur].short : "Начать прогулку";
+    $("startSub").hidden = geoState !== "off";
+    renderReset(false);
+
+    var li = [];
+    T.stops.forEach(function (s, i) {
+      var cls = (isVisited(i) ? "visited" : "") + (started && prog.cur === i ? " current" : "");
+      var state = isVisited(i) ? "пройдена" : (started && prog.cur === i ? "сейчас" : "");
+      var leg = "";
+      if (i < N - 1) {
+        var l = T.legs[i];
+        leg = '<div class="r-leg">↓ ' + (l.cable ? "канатная дорога " + CABLE_M + NB + "м + " + fmtDist(legWalk[i]) + " пешком" : fmtDist(legWalk[i]) + " пешком · ≈" + NB + fmtDuration(walkMin(legWalk[i]))) + "</div>";
+      }
+      li.push('<li class="' + cls + '"><button class="r-item" type="button" data-i="' + i + '"><span class="r-num">' + (i + 1) + '</span><span><span class="r-title">' + esc(s.title) + '</span><span class="r-addr">' + esc(s.address) + '</span></span><span class="r-state">' + state + "</span></button>" + leg + "</li>");
+    });
+    $("routeList").innerHTML = li.join("");
+    $("routeList").querySelectorAll(".r-item").forEach(function (b) {
+      b.addEventListener("click", function () { openStop(+b.getAttribute("data-i")); });
+    });
+  }
+  function renderReset(confirming) {
+    var box = $("resetBox");
+    if (!prog.started && !prog.visited.length) { box.innerHTML = ""; return; }
+    if (!confirming) {
+      box.innerHTML = '<span>Пройдено ' + prog.visited.length + " из " + N + '</span><button class="btn-link" type="button" id="resetBtn">Сбросить прогресс</button>';
+      $("resetBtn").addEventListener("click", function () { renderReset(true); });
+    } else {
+      box.innerHTML = '<span>Начать с нуля?</span><button class="btn-link" type="button" id="resetYes">Да, сбросить</button><button class="btn-link" type="button" id="resetNo">Нет</button>';
+      $("resetYes").addEventListener("click", function () { prog = { cur: 0, visited: [], started: null, finished: null }; save(); renderHome(); });
+      $("resetNo").addEventListener("click", function () { renderReset(false); });
+    }
+  }
+
+  function renderSegments() {
+    var o = "";
+    for (var i = 0; i < N; i++) {
+      o += '<button type="button" data-i="' + i + '" class="' + (isVisited(i) ? "visited" : "") + (prog.cur === i && view === "walk" ? " current" : "") + '" aria-label="Точка ' + (i + 1) + '"><span></span></button>';
+    }
+    $("segments").innerHTML = o;
+    $("segments").querySelectorAll("button").forEach(function (b) {
+      b.addEventListener("click", function () { openStop(+b.getAttribute("data-i")); });
+    });
+  }
+
+  function renderStop(i) {
+    var s = T.stops[i];
+    $("counter").textContent = "Точка " + (i + 1) + " из " + N;
+    renderSegments();
+    var here = pt(s);
+    var art = s.photo
+      ? '<img src="' + esc(s.photo) + '" alt="' + esc(s.title) + '" loading="lazy">' + (s.photoCredit ? "<figcaption>" + esc(s.photoCredit) + "</figcaption>" : "")
+      : (ART[s.art] ? ART[s.art]() : "");
+    var notices = activeNotices(s).map(function (n) { return '<div class="notice"><b>Сейчас:</b> ' + esc(n.text) + "</div>"; }).join("");
+    var listen = s.audio
+      ? '<audio controls preload="none" src="' + esc(s.audio) + '"></audio>'
+      : ("speechSynthesis" in window ? '<button class="btn btn-secondary btn-sm" type="button" id="ttsBtn">▶ Слушать</button><span class="hint">голосом телефона</span>' : "");
+    var next = "";
+    if (i < N - 1) {
+      var l = T.legs[i], ns = T.stops[i + 1];
+      var from = l.from ? [l.from.lat, l.from.lon] : here;
+      next = '<section class="next" aria-labelledby="nextT"><h3 id="nextT">Как дойти до точки ' + (i + 2) + " — " + esc(ns.short) + "</h3>" +
+        '<p class="meta">' + (l.cable ? "канатная дорога " + CABLE_M + NB + "м, затем ≈" + NB + fmtDist(legWalk[i]) + " пешком" : "≈" + NB + fmtDist(legWalk[i]) + " пешком · " + fmtDuration(walkMin(legWalk[i]))) + "</p>" +
+        "<p>" + esc(l.note) + "</p>" +
+        '<div class="btn-row"><a class="btn btn-secondary" target="_blank" rel="noopener" href="' + yaRoute(from, pt(ns)) + '">Яндекс Карты</a><a class="btn btn-secondary" target="_blank" rel="noopener" href="' + goRoute(from, pt(ns)) + '">Google Карты</a></div></section>';
+    }
+    var nextLabel = i < N - 1 ? "Дальше: точка " + (i + 2) + " →" : "Завершить прогулку";
+    $("card").innerHTML =
+      '<figure class="art">' + art + "</figure>" +
+      '<header class="stop-head"><p class="eyebrow">Точка ' + (i + 1) + " · " + esc(s.address) + "</p><h2>" + esc(s.title) + '</h2><p class="nick">' + esc(s.nickname) + "</p></header>" +
+      '<div id="geo" class="geo wide" aria-live="polite"></div>' +
+      '<p class="here-links"><span>Маршрут сюда от моего места:</span><a target="_blank" rel="noopener" href="' + yaRoute(null, here) + '">Яндекс</a><a target="_blank" rel="noopener" href="' + goRoute(null, here) + '">Google</a></p>' +
+      notices +
+      '<p class="lead">' + esc(s.lead) + "</p>" +
+      (listen ? '<div class="listen">' + listen + "</div>" : "") +
+      '<div class="text">' + (s.draft ? '<span><span class="chip draft">черновик текста</span></span>' : "") + s.text.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + "</div>" +
+      (s.formula ? '<aside class="formula" aria-label="Формула точки"><span class="mono-label">Формула точки</span><div class="f">' + s.formula.html + "</div><p>" + esc(s.formula.caption) + "</p></aside>" : "") +
+      '<p class="practical"><span class="mono-label">Как попасть</span><br>' + esc(s.metro) + ". " + esc(s.practical) + "</p>" +
+      next +
+      '<nav class="pager">' + (i > 0 ? '<button class="btn btn-secondary" type="button" id="prevBtn">← Назад</button>' : "") +
+      '<button class="btn btn-primary' + (i > 0 ? "" : " solo") + '" type="button" id="nextBtn">' + nextLabel + "</button></nav>";
+    renderGeo();
+    var tts = $("ttsBtn");
+    if (tts) tts.addEventListener("click", function () { speak(s, tts); });
+    var prev = $("prevBtn");
+    if (prev) prev.addEventListener("click", function () { openStop(i - 1); });
+    $("nextBtn").addEventListener("click", function () {
+      markVisited(i);
+      if (i < N - 1) openStop(i + 1);
+      else { prog.finished = Date.now(); save(); location.hash = "finish"; }
+    });
+  }
+
+  function renderFinish() {
+    $("counter").textContent = "Финиш";
+    renderSegments();
+    $("card").innerHTML =
+      '<figure class="art">' + ART.novodev() + "</figure>" +
+      '<div class="finish"><p class="eyebrow">Прогулка пройдена</p><p class="big">Спасибо, что прошли этот маршрут</p>' +
+      "<p>" + fmtDist(totalM) + " и " + N + " точек: от Академии наук до Новодевичьего. " + esc(T.person.name) + " прожил 84 года, а его теоремы о случайности, сложности и устойчивости работают и сегодня.</p>" +
+      '<div class="btn-row"><button class="btn btn-secondary" type="button" id="finShare">Поделиться прогулкой</button><button class="btn btn-secondary" type="button" id="finHome">На обзор</button></div></div>';
+    $("finHome").addEventListener("click", function () { location.hash = ""; });
+    $("finShare").addEventListener("click", function () { location.hash = ""; setTimeout(function () { $("shareTitle").scrollIntoView({ block: "start" }); }, 30); });
+  }
+
+  function openStop(i) {
+    if (!prog.started || prog.finished) { prog.started = Date.now(); prog.finished = null; }
+    prog.cur = i; save();
+    var h = "s" + (i + 1);
+    if (location.hash.slice(1) === h) route(); else location.hash = h;
+  }
+
+  function route() {
+    var h = location.hash.replace(/^#/, "");
+    var m = /^s([1-9])$/.exec(h);
+    if (m && +m[1] <= N) {
+      var i = +m[1] - 1;
+      prog.cur = i; if (!prog.started) prog.started = Date.now(); save();
+      show("walk"); renderStop(i);
+    } else if (h === "finish") {
+      show("finish"); renderFinish();
+    } else {
+      show("home"); renderHome();
+    }
+  }
+
+  /* ---------- Офлайн ---------- */
+  var offOK = !PREVIEW && "serviceWorker" in navigator && "caches" in window && window.isSecureContext;
+  async function offlineCheck() {
+    var st = $("offStatus"), btn = $("offBtn");
+    if (!offOK) {
+      btn.disabled = true;
+      st.className = "status";
+      st.textContent = PREVIEW
+        ? "В превью сохранение недоступно. Оно работает, когда сайт открыт по собственному адресу (https)."
+        : "Этот браузер не поддерживает офлайн-режим. Попробуйте Safari или Chrome по https-ссылке.";
+      return;
+    }
+    try {
+      var cache = await caches.open(CACHE), list = T.assets(), have = 0;
+      for (var k = 0; k < list.length; k++) if (await cache.match(list[k], { ignoreSearch: true })) have++;
+      if (have === list.length) {
+        st.className = "status ok";
+        st.innerHTML = "Прогулка сохранена в телефоне и работает без интернета. " + '<span class="num">' + list.length + " " + plural(list.length, "файл", "файла", "файлов") + "</span>";
+        btn.textContent = "Обновить сохранённое";
+      } else {
+        st.className = "status";
+        st.textContent = have ? "Сохранено " + have + " из " + list.length + " файлов. Нажмите, чтобы докачать." : "Ещё не сохранено.";
+        btn.textContent = "Сохранить для офлайна";
+      }
+    } catch (e) { st.textContent = "Не удалось проверить сохранённые файлы."; }
+  }
+  async function offlineDownload() {
+    if (!offOK) return;
+    var btn = $("offBtn"), bar = $("offBar"), st = $("offStatus");
+    btn.disabled = true; bar.hidden = false; st.className = "status";
+    try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+    var list = T.assets(), done = 0, bytes = 0, failed = [];
+    var cache = await caches.open(CACHE);
+    for (var k = 0; k < list.length; k++) {
+      try {
+        var res = await fetch(list[k], { cache: "reload" });
+        if (!res.ok) throw new Error(res.status);
+        var blob = await res.clone().blob(); bytes += blob.size;
+        await cache.put(list[k], res);
+      } catch (e) { failed.push(list[k]); }
+      done++;
+      bar.firstElementChild.style.width = (done / list.length * 100).toFixed(0) + "%";
+      st.textContent = "Сохраняем: " + done + " из " + list.length + " · " + (bytes / 1048576).toFixed(1).replace(".", ",") + NB + "МБ";
+    }
+    btn.disabled = false;
+    setTimeout(function () { bar.hidden = true; }, 600);
+    if (failed.length) {
+      st.textContent = "Не скачались " + failed.length + " " + plural(failed.length, "файл", "файла", "файлов") + ". Проверьте интернет и нажмите ещё раз.";
+    } else {
+      await offlineCheck();
+    }
+  }
+
+  function registerSW() {
+    if (!offOK) return;
+    navigator.serviceWorker.register("sw.js").then(function () {
+      return navigator.serviceWorker.ready;
+    }).then(function () { setTimeout(offlineCheck, 400); }).catch(function () {});
+  }
+
+  /* ---------- Поделиться ---------- */
+  function shareURL() { return location.href.split("#")[0]; }
+  function renderShare() {
+    var url = shareURL();
+    $("shareUrl").textContent = PREVIEW ? "Ссылка появится на постоянном адресе сайта" : url;
+    if (PREVIEW || typeof qrcode !== "function") {
+      $("qr").innerHTML = '<svg viewBox="0 0 10 10"><rect width="10" height="10" fill="#F2F2F2"/><text x="5" y="5.6" font-size="1.1" text-anchor="middle" fill="#666" font-family="sans-serif">QR</text></svg>';
+      $("qrHint").textContent = "QR-код строится из адреса сайта, поэтому появится после публикации на собственной ссылке.";
+      $("copyBtn").disabled = PREVIEW;
+      return;
+    }
+    var q = qrcode(0, "M"); q.addData(url); q.make();
+    var n = q.getModuleCount(), d = "";
+    for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (q.isDark(r, c)) d += "M" + c + "," + r + "h1v1h-1z";
+    $("qr").innerHTML = '<svg viewBox="-2 -2 ' + (n + 4) + " " + (n + 4) + '" shape-rendering="crispEdges"><rect x="-2" y="-2" width="' + (n + 4) + '" height="' + (n + 4) + '" fill="#FFFFFF"/><path d="' + d + '" fill="#111111"/></svg>';
+    if (navigator.share) $("shareBtn").hidden = false;
+    $("qrPngBtn").hidden = false;
+    $("qrPngBtn").onclick = function () {
+      var scale = 16, size = (n + 8) * scale, cv = document.createElement("canvas");
+      cv.width = cv.height = size;
+      var cx = cv.getContext("2d");
+      cx.fillStyle = "#FFFFFF"; cx.fillRect(0, 0, size, size); cx.fillStyle = "#111111";
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (q.isDark(r, c)) cx.fillRect((c + 4) * scale, (r + 4) * scale, scale, scale);
+      var a = document.createElement("a");
+      a.href = cv.toDataURL("image/png"); a.download = "progulka-kolmogorova-qr.png";
+      document.body.appendChild(a); a.click(); a.remove();
+    };
+  }
+  $("copyBtn").addEventListener("click", function () {
+    var url = shareURL(), btn = this;
+    function done() { btn.textContent = "Ссылка скопирована"; setTimeout(function () { btn.textContent = "Скопировать ссылку"; }, 1800); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(done, function () { selectUrl(); });
+    } else selectUrl();
+  });
+  function selectUrl() {
+    var r = document.createRange(); r.selectNodeContents($("shareUrl"));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    $("copyBtn").textContent = "Выделено — скопируйте";
+  }
+  $("shareBtn").addEventListener("click", function () {
+    navigator.share({ title: T.title, text: "Математическая прогулка по Москве памяти Колмогорова", url: shareURL() }).catch(function () {});
+  });
+
+  /* ---------- Памятная строка ---------- */
+  function renderMemorial() {
+    var d = new Date(), md = String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    var el = $("memorial");
+    if (md === "10-20") {
+      var n = d.getFullYear() - 1987;
+      el.innerHTML = "<strong>Сегодня день памяти.</strong> " + n + " " + plural(n, "год", "года", "лет") + " назад, 20 октября 1987 года, Андрея Николаевича не стало.";
+      el.hidden = false;
+    } else if (md === "04-25") {
+      var b = d.getFullYear() - 1903;
+      el.innerHTML = "<strong>Сегодня день рождения Колмогорова</strong> — " + b + " " + plural(b, "год", "года", "лет") + " со дня рождения.";
+      el.hidden = false;
+    }
+  }
+
+  /* ---------- Запуск ---------- */
+  $("startBtn").addEventListener("click", function () {
+    if (prog.finished) prog = { cur: 0, visited: [], started: null, finished: null };
+    startGeo();
+    openStop(prog.started ? prog.cur : 0);
+  });
+  $("toHome").addEventListener("click", function () { location.hash = ""; });
+  $("offBtn").addEventListener("click", offlineDownload);
+  window.addEventListener("hashchange", route);
+  if (PREVIEW) $("previewNote").hidden = false;
+
+  renderMemorial();
+  renderShare();
+  route();
+  offlineCheck();
+  registerSW();
+
+  // Если доступ к геолокации уже выдан раньше — включаем без лишних вопросов.
+  if (geoState === "off" && navigator.permissions && navigator.permissions.query) {
+    navigator.permissions.query({ name: "geolocation" }).then(function (r) { if (r.state === "granted") startGeo(); }).catch(function () {});
+  }
+})();
+</script>
+<!--ARTIFACT-BODY-END-->
+</body>
+</html>
