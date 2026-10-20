@@ -11,7 +11,7 @@
      6. Как пройти на точку n+1       — legs[n-1]: note, hours, notices точки */
 (function (root) {
   var TOUR = {
-    version: "2026-10-20-7",
+    version: "2026-10-20-8",
     title: "Прогулка Колмогорова",
     person: {
       name: "Андрей Николаевич Колмогоров",
