@@ -365,11 +365,43 @@ p { margin: 0; }
 .practical { font-size: 0.94rem; color: var(--fg); padding-left: 12px; border-left: 2px solid var(--line); }
 
 .next { display: flex; flex-direction: column; gap: 10px; }
-.next h3 { font-family: var(--f-body); font-weight: 650; font-size: 1.12rem; }
+.next > h3 { font-family: var(--f-body); font-weight: 650; font-size: 1.12rem; }
 .next .meta { font-family: var(--f-mono); font-size: 0.84rem; color: var(--muted); }
 .pager { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 10px; padding-top: 4px; }
 .pager .btn-primary { min-height: 54px; }
 .pager .solo { grid-column: 1 / -1; }
+
+/* Рассказы о математиках */
+.flow { display: flex; flex-direction: column; gap: 26px; }
+.toc { display: flex; flex-direction: column; gap: 8px; }
+.toc-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-btn {
+  min-height: 40px; padding: 6px 14px; border-radius: 999px;
+  border: 1px solid var(--ink); background: var(--surface); color: var(--ink);
+  font-weight: 600; font-size: 0.92rem; cursor: pointer;
+}
+.chip-btn:hover { background: var(--ink-soft); }
+.chip-btn .way { font-weight: 400; color: var(--muted); }
+.story { display: flex; flex-direction: column; gap: 14px; padding-top: 22px; border-top: 1px solid var(--line); scroll-margin-top: 108px; }
+.next .story { margin-top: 8px; }
+.story-head { display: flex; flex-direction: column; gap: 4px; }
+.story-head h3 { font-family: var(--f-display); font-weight: 700; font-size: 1.6rem; line-height: 1.12; }
+.story-head .years { font-family: var(--f-mono); font-size: 0.86rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.story .art { margin-block: 4px; }
+.story .art figcaption { font-size: 0.84rem; line-height: 1.45; padding: 8px 10px; }
+.story .art figcaption i { font-family: var(--f-math); font-size: 1.05em; }
+.coins { margin: 4px 0; display: flex; flex-direction: column; gap: 10px; }
+.coin-row { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 8px; align-items: center; }
+.coin-n { font-family: var(--f-mono); font-size: 0.8rem; color: var(--muted); }
+.coin-seq { display: grid; grid-template-columns: repeat(var(--n, 10), minmax(0, 32px)); gap: 4px; }
+.coin {
+  aspect-ratio: 1; max-width: 100%; border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--f-display); font-weight: 700; font-size: 0.92rem; line-height: 1;
+  border: 1.5px solid var(--ink); color: var(--ink); background: var(--surface);
+}
+.coin.o { background: var(--ink); color: var(--on-ink); }
+.coins figcaption { font-size: 0.86rem; color: var(--muted); }
+.r-who { font-size: 0.84rem; color: var(--ink); display: block; margin-top: 2px; }
 
 .finish { display: flex; flex-direction: column; gap: 16px; text-align: left; }
 .finish .big { font-family: var(--f-display); font-weight: 700; font-size: clamp(2rem, 9vw, 2.8rem); line-height: 1.05; }
@@ -447,7 +479,7 @@ p { margin: 0; }
     </section>
 
     <footer class="foot">
-      <p>Тексты точек — черновик: полные рассказы о математиках появятся позже.</p>
+      <p>Рассказы о математиках — авторские тексты экскурсии. Описания самих точек пока черновые и будут заменены.</p>
       <p>Карта — схема с приблизительными путями; точный пеший маршрут строят Яндекс и Google Карты.</p>
     </footer>
   </main>
@@ -466,12 +498,16 @@ p { margin: 0; }
 </div>
 <!--ARTIFACT-SCRIPTS-START-->
 <script src="tour-data.js"></script>
+<script src="stories.js"></script>
 <script src="vendor/qrcode.js"></script>
 <!--ARTIFACT-SCRIPTS-END-->
 <script>
 (function () {
   "use strict";
   var T = window.TOUR;
+  var STORIES = (window.STORIES || []).slice().sort(function (a, b) { return a.order - b.order; });
+  function storiesAt(place) { return STORIES.filter(function (x) { return x.place === place; }); }
+  var TTS = "speechSynthesis" in window;
   var PREVIEW = !!window.__PREVIEW__;
   var KEY = "kolmogorov-walk:progress";
   var CACHE = "kolmogorov-walk-" + T.version;
@@ -809,6 +845,124 @@ p { margin: 0; }
     }
   };
 
+  /* ---------- Иллюстрации к рассказам ---------- */
+  function svgFig(inner, h, label) {
+    return '<svg viewBox="0 0 320 ' + h + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' + esc(label) + '">' + inner + "</svg>";
+  }
+  function sub(base, idx, cls, x, y, anchor) {
+    return '<text class="' + cls + '" x="' + x + '" y="' + y + '"' + (anchor ? ' text-anchor="' + anchor + '"' : "") + '>' + base + '<tspan font-size="0.72em" dy="3">' + idx + "</tspan></text>";
+  }
+  function arrowHead(x, y, dir) {
+    var d = dir === "r" ? "M" + (x - 6) + "," + (y - 3) + " L" + x + "," + y + " L" + (x - 6) + "," + (y + 3)
+      : "M" + (x - 3) + "," + (y + 6) + " L" + x + "," + y + " L" + (x + 3) + "," + (y + 6);
+    return '<path class="a-l" d="' + d + '"/>';
+  }
+  var FIG = {
+    kpp: function () {
+      var X0 = 34, X1 = 304, Y1 = 36, Y0 = 128, o = "";
+      o += line(X0, Y1, X1 - 10, Y1, "a-t2");
+      o += line(X0, Y0, X1, Y0, "a-l") + arrowHead(X1, Y0, "r") + line(X0, Y0, X0, 20, "a-l") + arrowHead(X0, 20, "u");
+      o += '<text class="a-tx" x="' + (X0 - 6) + '" y="' + (Y1 + 3) + '" text-anchor="end">1</text><text class="a-tx" x="' + (X0 - 6) + '" y="' + (Y0 + 3) + '" text-anchor="end">0</text>';
+      o += '<text class="a-m" x="' + (X0 + 7) + '" y="26">u</text><text class="a-m" x="' + (X1 - 2) + '" y="' + (Y0 + 16) + '" text-anchor="end">x</text>';
+      [[100, 0.3], [170, 0.6], [240, 1]].forEach(function (c, k) {
+        var d = "";
+        for (var x = X0; x <= X1 - 10; x += 3) {
+          var u = 1 / (1 + Math.exp((x - c[0]) / 13));
+          d += (x === X0 ? "M" : " L") + x + "," + (Y0 - u * (Y0 - Y1)).toFixed(1);
+        }
+        o += '<path class="a-l" style="stroke-opacity:' + c[1] + '" d="' + d + '"/>';
+        o += line(c[0], (Y0 + Y1) / 2, c[0], Y0, "a-t2") + '<circle class="a-dot" cx="' + c[0] + '" cy="' + ((Y0 + Y1) / 2) + '" r="2.2"/>';
+        o += sub("t", k + 1, "a-m", c[0] + 6, (Y0 + Y1) / 2 - 6);
+      });
+      o += line(100, 146, 236, 146, "a-d") + '<path class="a-d" d="M230,143 L236,146 L230,149"/>';
+      o += '<text class="a-dtx" x="168" y="160" text-anchor="middle">скорость фронта c</text>';
+      return svgFig(o, 166, "Волна распространения полезного гена: фронт сдвигается вправо с постоянной скоростью");
+    },
+    dynkin: function () {
+      var o = "", y = 92, xs = [];
+      for (var k = 0; k < 7; k++) xs.push(46 + k * 38);
+      o += line(xs[0], y, xs[6], y, "a-l") + line(xs[2], y, xs[2], y - 44, "a-l");
+      xs.forEach(function (x) { o += '<circle class="a-f" cx="' + x + '" cy="' + y + '" r="7"/>'; });
+      o += '<circle class="a-f" cx="' + xs[2] + '" cy="' + (y - 44) + '" r="7"/>';
+      o += sub("E", 8, "a-m", 18, 30);
+      o += '<text class="a-tx" x="160" y="' + (y + 26) + '" text-anchor="middle">8 точек · 7 линий</text>';
+      return svgFig(o, 128, "Диаграмма Дынкина алгебры Ли E8: семь точек в ряд и одна сверху над третьей");
+    },
+    lobachevsky: function () {
+      var cx = 226, cy = 86, Rr = 72, o = "", rad = Math.PI / 180;
+      o += '<circle class="a-f" cx="' + cx + '" cy="' + cy + '" r="' + Rr + '"/>';
+      function bp(a) { return [cx + Rr * Math.cos(a * rad), cy + Rr * Math.sin(a * rad)]; }
+      // прямая a: дуга, перпендикулярная краю, с концами на -40° и 40°
+      var h = 40, dc = Rr / Math.cos(h * rad), r = Rr * Math.tan(h * rad), ax = cx + dc, d = "";
+      var a0 = Math.atan2(bp(-h)[1] - cy, bp(-h)[0] - ax), a1 = Math.atan2(bp(h)[1] - cy, bp(h)[0] - ax);
+      if (a0 < 0) a0 += 2 * Math.PI; if (a1 < 0) a1 += 2 * Math.PI;
+      for (var i = 0; i <= 40; i++) { var t = a0 + (a1 - a0) * i / 40; d += (i ? " L" : "M") + (ax + r * Math.cos(t)).toFixed(1) + "," + (cy + r * Math.sin(t)).toFixed(1); }
+      o += '<path class="a-l" style="stroke-width:2" d="' + d + '"/>';
+      [55, 75, 90, 105, 125].forEach(function (th) { var p1 = bp(th), p2 = bp(th + 180); o += line(p1[0].toFixed(1), p1[1].toFixed(1), p2[0].toFixed(1), p2[1].toFixed(1), "a-t"); });
+      [h, 180 - h].forEach(function (th) { var p1 = bp(th), p2 = bp(th + 180); o += '<line class="a-d" stroke-dasharray="3 3" x1="' + p1[0].toFixed(1) + '" y1="' + p1[1].toFixed(1) + '" x2="' + p2[0].toFixed(1) + '" y2="' + p2[1].toFixed(1) + '"/>'; });
+      o += '<circle class="a-dot" cx="' + cx + '" cy="' + cy + '" r="3"/><text class="a-m" x="' + (cx - 14) + '" y="' + (cy - 5) + '">P</text>';
+      o += '<text class="a-m" x="' + (cx + dc - r - 13) + '" y="' + (cy + 4) + '">a</text>';
+      var lines = ["a — прямая", "P — точка вне её", "", "сплошные: проходят", "через P и не пересекают a", "", "пунктир: две предельные", "параллели"];
+      lines.forEach(function (tx, k) { if (tx) o += '<text class="' + (k >= 6 ? "a-dtx" : "a-tx") + '" x="12" y="' + (36 + k * 13) + '">' + tx + "</text>"; });
+      return svgFig(o, 172, "Модель Пуанкаре: через точку P проходит много прямых, не пересекающих прямую a");
+    },
+    pnp: function () {
+      var o = "";
+      o += '<text class="a-tx" x="84" y="16" text-anchor="middle">если P ≠ NP</text>';
+      o += '<ellipse class="a-f" cx="84" cy="84" rx="72" ry="56"/>';
+      o += '<ellipse class="a-f" style="fill:var(--ink-soft)" cx="56" cy="92" rx="32" ry="30"/>';
+      o += '<ellipse class="a-d" style="fill:none;stroke-width:1.2" cx="122" cy="88" rx="24" ry="34"/>';
+      o += '<text class="a-m" x="84" y="44" text-anchor="middle">NP</text><text class="a-m" x="56" y="97" text-anchor="middle">P</text>';
+      o += '<text class="a-dtx" x="122" y="86" text-anchor="middle" style="font-size:7px">NP-</text><text class="a-dtx" x="122" y="95" text-anchor="middle" style="font-size:7px">полные</text>';
+      o += '<text class="a-tx" x="244" y="16" text-anchor="middle">если P = NP</text>';
+      o += '<ellipse class="a-f" style="fill:var(--ink-soft)" cx="244" cy="84" rx="62" ry="56"/>';
+      o += '<text class="a-m" x="244" y="82" text-anchor="middle">P = NP</text><text class="a-dtx" x="244" y="98" text-anchor="middle">= NP-полные</text>';
+      return svgFig(o, 150, "Две картины: если P не равно NP, класс P лежит внутри NP отдельно от NP-полных задач; если P равно NP, все три совпадают");
+    }
+  };
+  var FIGCAP = {
+    kpp: "Доля носителей полезного гена <i>u</i> в моменты <i>t</i><sub>1</sub> &lt; <i>t</i><sub>2</sub> &lt; <i>t</i><sub>3</sub>. Профиль не меняет формы и сдвигается вправо с постоянной скоростью.",
+    dynkin: "Диаграмма Дынкина алгебры Ли E<sub>8</sub>: восемь точек, семь линий.",
+    lobachevsky: "Модель Пуанкаре плоскости Лобачевского: прямые — это дуги, перпендикулярные краю круга, и диаметры.",
+    pnp: "Две возможные картины мира. Какая из них верна, неизвестно."
+  };
+  function coinsHTML(rows) {
+    var n = rows[0].length, o = '<figure class="coins">';
+    rows.forEach(function (r, k) {
+      o += '<div class="coin-row"><span class="coin-n">' + (k + 1) + '</span><span class="coin-seq" style="--n:' + r.length + '" role="img" aria-label="' + esc(coinWords(r)) + '">' +
+        r.split("").map(function (c) { return '<span class="coin ' + (c === "О" ? "o" : "r") + '" aria-hidden="true">' + c + "</span>"; }).join("") + "</span></div>";
+    });
+    return o + "<figcaption>О — орёл, Р — решка. Вероятность каждой строки одна и та же: (1/2)<sup>" + n + "</sup> = 1/" + Math.pow(2, n) + ".</figcaption></figure>";
+  }
+  function storyHTML(st) {
+    var fig = FIG[st.figure] ? '<figure class="art">' + FIG[st.figure]() + (FIGCAP[st.figure] ? "<figcaption>" + FIGCAP[st.figure] + "</figcaption>" : "") + "</figure>" : "";
+    var after = typeof st.figure_after === "number" ? st.figure_after : st.blocks.length - 1;
+    var body = "";
+    st.blocks.forEach(function (b, k) {
+      body += typeof b === "string" ? "<p>" + esc(b) + "</p>" : (b.coins ? coinsHTML(b.coins) : "");
+      if (k === after) body += fig;
+    });
+    var listen = st.audio ? '<audio controls preload="none" src="' + esc(st.audio) + '"></audio>'
+      : (TTS ? '<div class="listen"><button class="btn btn-secondary btn-sm" type="button" data-say="' + esc(st.id) + '">▶ Слушать</button></div>' : "");
+    return '<section class="story" id="story-' + esc(st.id) + '">' +
+      '<header class="story-head"><p class="eyebrow">' + esc(st.when || "Рассказ о математике") + "</p><h3>" + esc(st.name) + '</h3><p class="years">' + esc(st.years) + "</p></header>" +
+      listen + '<div class="text">' + body + "</div></section>";
+  }
+  function flowHTML(s) {
+    var here = storiesAt(s.id), way = storiesAt("way:" + s.id);
+    var main = '<div class="text">' + (s.draft ? '<span><span class="chip draft">черновик текста</span></span>' : "") + s.text.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + "</div>" +
+      (s.formula ? '<aside class="formula" aria-label="Формула точки"><span class="mono-label">Формула точки</span><div class="f">' + s.formula.html + "</div><p>" + esc(s.formula.caption) + "</p></aside>" : "");
+    if (here.length) main = '<section class="story" id="story-place"><header class="story-head"><p class="eyebrow">Об этом месте</p></header>' + main + "</section>";
+    var items = [{ order: s.textOrder || 20, html: main }].concat(here.map(function (st) { return { order: st.order, html: storyHTML(st) }; }));
+    items.sort(function (a, b) { return a.order - b.order; });
+    var all = here.concat(way), toc = "";
+    if (all.length > 1) {
+      toc = '<nav class="toc" aria-label="Рассказы у этой точки"><span class="mono-label">Рассказы у этой точки</span><div class="toc-row">' +
+        all.map(function (st) { return '<button type="button" class="chip-btn" data-jump="story-' + esc(st.id) + '">' + (st.place.indexOf("way:") === 0 ? '<span class="way">в пути · </span>' : "") + esc(st.surname) + "</button>"; }).join("") + "</div></nav>";
+    }
+    return toc + '<div class="flow">' + items.map(function (it) { return it.html; }).join("") + "</div>";
+  }
+
   /* ---------- Геолокация ---------- */
   var pos = null, watchId = null, geoState = PREVIEW ? "preview" : ("geolocation" in navigator ? "off" : "unavailable");
   function startGeo() {
@@ -862,17 +1016,35 @@ p { margin: 0; }
   }
 
   /* ---------- Чтение вслух ---------- */
-  var speaking = false;
-  function stopSpeech() { if ("speechSynthesis" in window) speechSynthesis.cancel(); speaking = false; }
-  function speak(s, btn) {
-    if (!("speechSynthesis" in window)) return;
-    if (speaking) { stopSpeech(); btn.textContent = "▶ Слушать"; return; }
-    var u = new SpeechSynthesisUtterance([s.title, s.lead].concat(s.text).join(". "));
-    u.lang = "ru-RU"; u.rate = 0.98;
+  var speakBtn = null;
+  function stopSpeech() {
+    if (TTS) speechSynthesis.cancel();
+    if (speakBtn) speakBtn.textContent = "▶ Слушать";
+    speakBtn = null;
+  }
+  /* Читаем по абзацам: длинная фраза целиком обрывается в некоторых браузерах. */
+  function speakParts(parts, btn) {
+    if (!TTS) return;
+    var same = speakBtn === btn;
+    stopSpeech();
+    if (same) return;
     var v = speechSynthesis.getVoices().filter(function (x) { return /^ru/i.test(x.lang); });
-    if (v.length) u.voice = v.find(function (x) { return x.localService; }) || v[0];
-    u.onend = u.onerror = function () { speaking = false; btn.textContent = "▶ Слушать"; };
-    speechSynthesis.cancel(); speechSynthesis.speak(u); speaking = true; btn.textContent = "■ Остановить";
+    var voice = v.length ? (v.find(function (x) { return x.localService; }) || v[0]) : null;
+    parts = parts.filter(Boolean);
+    parts.forEach(function (t, k) {
+      var u = new SpeechSynthesisUtterance(String(t).replace(/\u00a0/g, " "));
+      u.lang = "ru-RU"; u.rate = 0.98; if (voice) u.voice = voice;
+      if (k === parts.length - 1) u.onend = function () { if (speakBtn === btn) { speakBtn = null; btn.textContent = "▶ Слушать"; } };
+      u.onerror = function (e) { if (e.error !== "interrupted" && e.error !== "canceled" && speakBtn === btn) { speakBtn = null; btn.textContent = "▶ Слушать"; } };
+      speechSynthesis.speak(u);
+    });
+    speakBtn = btn; btn.textContent = "■ Остановить";
+  }
+  function coinWords(row) { return row.split("").map(function (c) { return c === "О" ? "орёл" : "решка"; }).join(", "); }
+  function storyParts(st) {
+    return [st.name + ", " + st.years.replace("–", " — ")].concat(st.blocks.map(function (b) {
+      return typeof b === "string" ? b : (b.coins ? b.coins.map(coinWords).join(". ") : "");
+    }));
   }
 
   /* ---------- Экраны ---------- */
@@ -915,9 +1087,11 @@ p { margin: 0; }
       var leg = "";
       if (i < N - 1) {
         var l = T.legs[i];
-        leg = '<div class="r-leg">↓ ' + (l.cable ? "канатная дорога " + CABLE_M + NB + "м + " + fmtDist(legWalk[i]) + " пешком" : fmtDist(legWalk[i]) + " пешком · ≈" + NB + fmtDuration(walkMin(legWalk[i]))) + "</div>";
+        var wayNames = storiesAt("way:" + s.id).map(function (x) { return x.surname; });
+        leg = '<div class="r-leg">↓ ' + (l.cable ? "канатная дорога " + CABLE_M + NB + "м + " + fmtDist(legWalk[i]) + " пешком" : fmtDist(legWalk[i]) + " пешком · ≈" + NB + fmtDuration(walkMin(legWalk[i]))) +
+          (wayNames.length ? " · в пути: " + esc(wayNames.join(", ")) : "") + "</div>";
       }
-      li.push('<li class="' + cls + '"><button class="r-item" type="button" data-i="' + i + '"><span class="r-num">' + (i + 1) + '</span><span><span class="r-title">' + esc(s.title) + '</span><span class="r-addr">' + esc(s.address) + '</span></span><span class="r-state">' + state + "</span></button>" + leg + "</li>");
+      li.push('<li class="' + cls + '"><button class="r-item" type="button" data-i="' + i + '"><span class="r-num">' + (i + 1) + '</span><span><span class="r-title">' + esc(s.title) + '</span><span class="r-addr">' + esc(s.address) + '</span>' + (storiesAt(s.id).length ? '<span class="r-who">' + esc(storiesAt(s.id).map(function (x) { return x.surname; }).join(" · ")) + "</span>" : "") + '</span><span class="r-state">' + state + "</span></button>" + leg + "</li>");
     });
     $("routeList").innerHTML = li.join("");
     $("routeList").querySelectorAll(".r-item").forEach(function (b) {
@@ -959,7 +1133,7 @@ p { margin: 0; }
     var notices = activeNotices(s).map(function (n) { return '<div class="notice"><b>Сейчас:</b> ' + esc(n.text) + "</div>"; }).join("");
     var listen = s.audio
       ? '<audio controls preload="none" src="' + esc(s.audio) + '"></audio>'
-      : ("speechSynthesis" in window ? '<button class="btn btn-secondary btn-sm" type="button" id="ttsBtn">▶ Слушать</button><span class="hint">голосом телефона</span>' : "");
+      : (TTS ? '<button class="btn btn-secondary btn-sm" type="button" id="ttsBtn">▶ Слушать</button><span class="hint">голосом телефона</span>' : "");
     var next = "";
     if (i < N - 1) {
       var l = T.legs[i], ns = T.stops[i + 1];
@@ -967,7 +1141,8 @@ p { margin: 0; }
       next = '<section class="next" aria-labelledby="nextT"><h3 id="nextT">Как дойти до точки ' + (i + 2) + " — " + esc(ns.short) + "</h3>" +
         '<p class="meta">' + (l.cable ? "канатная дорога " + CABLE_M + NB + "м, затем ≈" + NB + fmtDist(legWalk[i]) + " пешком" : "≈" + NB + fmtDist(legWalk[i]) + " пешком · " + fmtDuration(walkMin(legWalk[i]))) + "</p>" +
         "<p>" + esc(l.note) + "</p>" +
-        '<div class="btn-row"><a class="btn btn-secondary" target="_blank" rel="noopener" href="' + yaRoute(from, pt(ns)) + '">Яндекс Карты</a><a class="btn btn-secondary" target="_blank" rel="noopener" href="' + goRoute(from, pt(ns)) + '">Google Карты</a></div></section>';
+        '<div class="btn-row"><a class="btn btn-secondary" target="_blank" rel="noopener" href="' + yaRoute(from, pt(ns)) + '">Яндекс Карты</a><a class="btn btn-secondary" target="_blank" rel="noopener" href="' + goRoute(from, pt(ns)) + '">Google Карты</a></div>' +
+        storiesAt("way:" + s.id).map(storyHTML).join("") + "</section>";
     }
     var nextLabel = i < N - 1 ? "Дальше: точка " + (i + 2) + " →" : "Завершить прогулку";
     $("card").innerHTML =
@@ -978,15 +1153,24 @@ p { margin: 0; }
       notices +
       '<p class="lead">' + esc(s.lead) + "</p>" +
       (listen ? '<div class="listen">' + listen + "</div>" : "") +
-      '<div class="text">' + (s.draft ? '<span><span class="chip draft">черновик текста</span></span>' : "") + s.text.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + "</div>" +
-      (s.formula ? '<aside class="formula" aria-label="Формула точки"><span class="mono-label">Формула точки</span><div class="f">' + s.formula.html + "</div><p>" + esc(s.formula.caption) + "</p></aside>" : "") +
+      flowHTML(s) +
       '<p class="practical"><span class="mono-label">Как попасть</span><br>' + esc(s.metro) + ". " + esc(s.practical) + "</p>" +
       next +
       '<nav class="pager">' + (i > 0 ? '<button class="btn btn-secondary" type="button" id="prevBtn">← Назад</button>' : "") +
       '<button class="btn btn-primary' + (i > 0 ? "" : " solo") + '" type="button" id="nextBtn">' + nextLabel + "</button></nav>";
     renderGeo();
     var tts = $("ttsBtn");
-    if (tts) tts.addEventListener("click", function () { speak(s, tts); });
+    if (tts) tts.addEventListener("click", function () { speakParts([s.title, s.lead].concat(s.text), tts); });
+    $("card").querySelectorAll("[data-say]").forEach(function (b) {
+      var st = STORIES.find(function (x) { return x.id === b.getAttribute("data-say"); });
+      if (st) b.addEventListener("click", function () { speakParts(storyParts(st), b); });
+    });
+    $("card").querySelectorAll("[data-jump]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var el = document.getElementById(b.getAttribute("data-jump"));
+        if (el) el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+      });
+    });
     var prev = $("prevBtn");
     if (prev) prev.addEventListener("click", function () { openStop(i - 1); });
     $("nextBtn").addEventListener("click", function () {

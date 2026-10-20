@@ -3,7 +3,7 @@
    Чтобы обновить кэш у тех, кто уже открывал сайт, увеличьте version. */
 (function (root) {
   var TOUR = {
-    version: "2026-10-20-1",
+    version: "2026-10-20-2",
     title: "Прогулка Колмогорова",
     person: {
       name: "Андрей Николаевич Колмогоров",
@@ -11,7 +11,7 @@
       died: "1987-10-20"
     },
     intro:
-      "Пять точек, около 7,5 км и одна канатная дорога. Маршрут ведёт от Академии наук через Стекловку и МГУ к Москве-реке и заканчивается на Новодевичьем кладбище, где похоронен Колмогоров.",
+      "Пять точек, около 7,5 км и одна канатная дорога. Маршрут ведёт от Академии наук через Стекловку и МГУ к Москве-реке и заканчивается на Новодевичьем кладбище, где похоронен Колмогоров. По дороге — рассказы о его учителях, учениках и коллегах.",
 
     stops: [
       {
@@ -172,7 +172,7 @@
 
     /* Файлы оболочки сайта для офлайн-кэша. */
     shell: [
-      "./", "index.html", "tour-data.js", "manifest.webmanifest", "vendor/qrcode.js",
+      "./", "index.html", "tour-data.js", "stories.js", "manifest.webmanifest", "vendor/qrcode.js",
       "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png",
       "fonts/old-standard-tt-cyrillic-400-normal.woff2", "fonts/old-standard-tt-latin-400-normal.woff2",
       "fonts/old-standard-tt-cyrillic-400-italic.woff2", "fonts/old-standard-tt-latin-400-italic.woff2",
