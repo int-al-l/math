@@ -1304,7 +1304,14 @@ p { margin: 0; }
 
   function registerSW() {
     if (!offOK) return;
-    navigator.serviceWorker.register("sw.js").then(function () {
+    // Новая версия сайта подхватывается сразу: если она пришла в первые секунды после открытия — перезагружаемся.
+    var hadCtrl = !!navigator.serviceWorker.controller, t0 = Date.now(), reloading = false;
+    navigator.serviceWorker.addEventListener("controllerchange", function () {
+      if (hadCtrl && !reloading && Date.now() - t0 < 15000) { reloading = true; location.reload(); }
+      else setTimeout(offlineCheck, 400);
+    });
+    navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then(function (reg) {
+      reg.update().catch(function () {});
       return navigator.serviceWorker.ready;
     }).then(function () { setTimeout(offlineCheck, 400); }).catch(function () {});
   }
