@@ -1139,6 +1139,33 @@ p { margin: 0; }
       o += '<text class="a-m" x="160" y="' + (A[1] + S + 20) + '" text-anchor="middle"><tspan>(x, y)</tspan><tspan font-style="normal"> ↦ </tspan><tspan>(2x + y, x + y)</tspan><tspan font-style="normal"> mod 1</tspan></text>';
       return svgFig(o, 152, "Кот Арнольда: рисунок кота и то, что с ним стало после одного шага преобразования");
     },
+    zmsh: function () {
+      var o = "", sx = 50, sy = 8, sw = 108, sh = 84, rot = ' transform="rotate(-5 ' + (sx + sw / 2) + " " + (sy + sh / 2) + ')"';
+      // лист с решением: торчит из конверта
+      o += '<rect class="a-f"' + rot + ' x="' + sx + '" y="' + sy + '" width="' + sw + '" height="' + sh + '"/>';
+      var g = "", ox = sx + 54, oy = sy + 52;
+      g += line(sx + 10, oy, sx + sw - 10, oy, "a-t") + line(ox, sy + 8, ox, oy + 16, "a-t");
+      var d = "";
+      for (var x = -1.6; x <= 1.6001; x += 0.1) d += (x < -1.55 ? "M" : " L") + (ox + x * 26).toFixed(1) + "," + (oy - x * x * 15).toFixed(1);
+      g += '<path class="a-l" d="' + d + '"/>';
+      d = "";
+      for (x = -1.6; x <= 1.6001; x += 0.1) d += (x < -1.55 ? "M" : " L") + (ox + x * 26).toFixed(1) + "," + (oy - Math.abs(x) * 22).toFixed(1);
+      g += '<path class="a-d" stroke-dasharray="3 2" d="' + d + '"/>';
+      g += '<text class="a-m" x="' + (sx + sw - 8) + '" y="' + (oy + 13) + '" text-anchor="end" style="font-size:10px">y = x²</text>';
+      g += '<text class="a-dtx" x="' + (sx + 8) + '" y="' + (oy + 13) + '" style="font-size:8px">y = |2x|</text>';
+      o += "<g" + rot + ">" + g + "</g>";
+      // конверт поверх листа
+      var ex = 28, ey = 84, ew = 152, eh = 60;
+      o += '<rect class="a-f" x="' + ex + '" y="' + ey + '" width="' + ew + '" height="' + eh + '"/>';
+      o += '<path class="a-t" d="M' + (ex + 14) + "," + (ey + 30) + " L" + (ex + 104) + "," + (ey + 30) + " M" + (ex + 14) + "," + (ey + 40) + " L" + (ex + 104) + "," + (ey + 40) + " M" + (ex + 14) + "," + (ey + 50) + " L" + (ex + 80) + "," + (ey + 50) + '"/>';
+      o += '<rect class="a-f" style="stroke-dasharray:2 1.5" x="' + (ex + ew - 36) + '" y="' + (ey + 8) + '" width="28" height="32"/>';
+      o += '<text class="a-dtx" x="' + (ex + ew - 22) + '" y="' + (ey + 28) + '" text-anchor="middle" style="font-size:7px">ВЗМШ</text>';
+      // подписи
+      o += '<text class="a-tx" x="200" y="40">заочная школа:</text><text class="a-tx" x="200" y="52">задания и решения</text><text class="a-tx" x="200" y="64">шли по почте</text>';
+      o += '<text class="a-dtx" x="200" y="92">первый набор</text><text class="a-dtx" x="200" y="104">1442 ученика</text>';
+      o += '<text class="a-tx" x="200" y="128">всего ≈ 70 000</text>';
+      return svgFig(o, 154, "Лист с графиками параболы и модуля торчит из конверта с маркой ВЗМШ");
+    },
     pnp: function () {
       var o = "";
       o += '<text class="a-tx" x="84" y="16" text-anchor="middle">если P ≠ NP</text>';
@@ -1158,6 +1185,7 @@ p { margin: 0; }
     dynkin: "Диаграмма Дынкина алгебры Ли E<sub>8</sub>: восемь точек, семь линий.",
     lobachevsky: "Модель Пуанкаре плоскости Лобачевского: прямые — это дуги, перпендикулярные краю круга, и диаметры.",
     pnp: "Две возможные картины мира. Какая из них верна, неизвестно.",
+    zmsh: "Заочная математическая школа Гельфанда: школьники из любого уголка страны получали задания по почте и отправляли решения обратно.",
     odd: "Первое математическое открытие пятилетнего Колмогорова: каждое следующее нечётное число достраивает квадрат на одну клетку больше.",
     detect: "Наблюдения идут вокруг одного уровня, а в момент <i>θ</i> что-то ломается. Задача — поднять тревогу как можно раньше и не поднимать её зря.",
     billiard: "Бильярд Синая: две траектории, начавшиеся почти одинаково, после нескольких ударов о круглое препятствие расходятся совсем.",
