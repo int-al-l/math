@@ -11,7 +11,7 @@
      6. Как пройти на точку n+1       — legs[n-1]: note, hours, notices точки */
 (function (root) {
   var TOUR = {
-    version: "2026-10-20-15",
+    version: "2026-10-20-16",
     title: "Прогулка Колмогорова",
     person: {
       name: "Андрей Николаевич Колмогоров",
@@ -83,7 +83,7 @@
         lat: 55.7040, lon: 37.5303, radius: 160,
         label: "b",
         art: "msu", photo: null, photoCredit: null, audio: null,
-        draft: true,
+        draft: false,
         info: [
           "Главное здание МГУ на Воробьёвых горах открылось в 1953 году. Механико-математический факультет работает в нём до сих пор."
         ],
@@ -106,8 +106,8 @@
         arrive: "Верхняя станция канатной дороги — рядом со смотровой площадкой.",
         lat: 55.7100, lon: 37.5448, radius: 90,
         label: "t",
-        art: "kanatka", photo: null, photoCredit: null, audio: null,
-        draft: true,
+        art: "kanatka", photo: null, photoCredit: null, audio: "audio/04-kanatka.mp3",
+        draft: false,
         info: [
           "Со смотровой площадки Воробьёвых гор видны «Лужники» и Новодевичий монастырь — финишная точка.",
           "Канатная дорога открылась в 2018 году: 720 метров над Москвой-рекой, около пяти минут в кабине. Трос между опорами провисает по цепной линии."
@@ -138,8 +138,8 @@
         arrive: "Вход с Лужнецкого проезда. У входа висит схема участков. Часы работы уточните перед выходом.",
         lat: 55.7243, lon: 37.5563, radius: 90,
         label: "r",
-        art: "novodev", photo: null, photoCredit: null, audio: null,
-        draft: true,
+        art: "novodev", photo: null, photoCredit: null, audio: "audio/05-novodev.mp3",
+        draft: false,
         info: [
           "Кладбище примыкает к южной стене Новодевичьего монастыря, основанного в 1524 году. Участок за стеной отвели под кладбище в 1898 году; здесь похоронены многие учёные, писатели и музыканты."
         ],
