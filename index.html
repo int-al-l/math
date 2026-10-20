@@ -313,6 +313,8 @@ p { margin: 0; }
 .a-w { fill: none; stroke: var(--mark); stroke-width: 1.2; stroke-linejoin: round; stroke-linecap: round; }
 .a-dot { fill: var(--mark); }
 .a-star { fill: var(--mark); }
+.a-tie { fill: var(--ink); stroke: var(--ink); stroke-width: 1; stroke-linejoin: round; }
+.a-pupil { fill: var(--ink); }
 .a-water { fill: var(--river); }
 .a-hill { fill: var(--surface); stroke: var(--ink); stroke-width: 1.4; }
 .a-tx { font-family: var(--f-mono); font-size: 8.5px; fill: var(--muted); }
@@ -746,6 +748,81 @@ p { margin: 0; }
   }
 
   var ART = {
+    /* Портрет для финальной страницы. */
+    portrait: function () {
+      var o = "";
+      function brow(x0, y0, x1, y1, lift, dir) {
+        // кустистая бровь из коротких штрихов вдоль дуги
+        var s = "";
+        for (var k = 0; k <= 9; k++) {
+          var t = k / 9, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t - lift * 4 * t * (1 - t);
+          var len = 3.2 + 1.6 * Math.sin(Math.PI * t);
+          s += "M" + x.toFixed(1) + "," + (y + 1).toFixed(1) + " l" + (dir * len * 0.9).toFixed(1) + "," + (-len * 0.55).toFixed(1) + " ";
+        }
+        return '<path class="a-l" style="stroke-width:1.1" d="' + s + '"/>';
+      }
+      o += '<g transform="translate(-26,0)">';
+      // пиджак
+      o += '<path class="a-f" d="M86,200 C90,168 116,147 151,135 L185,135 C220,147 246,168 250,200 Z"/>';
+      o += '<path class="a-t" d="M116,200 C118,186 123,175 130,167 M220,200 C218,186 213,175 206,167"/>';
+      // шея
+      o += '<path class="a-f" style="stroke:none" d="M154,112 L154,140 L182,140 L182,112 Z"/>';
+      o += '<path class="a-l" d="M155,114 C155,124 154,131 153,137 M181,114 C181,124 182,131 183,137"/>';
+      o += '<path class="a-t" d="M160,128 C164,131 168,131 172,128"/>';
+      // рубашка, воротник, галстук
+      o += '<path class="a-f" d="M151,135 C157,141 163,143 168,143 C173,143 179,141 185,135 L170,182 L166,182 Z"/>';
+      o += '<path class="a-f" d="M151,135 L159,152 L168,143 Z"/><path class="a-f" d="M185,135 L177,152 L168,143 Z"/>';
+      o += '<path class="a-tie" d="M164.5,144 L171.5,144 L170.3,151 L165.7,151 Z"/>';
+      o += '<path class="a-tie" d="M165.7,151 L161.5,177 L168,187 L174.5,177 L170.3,151 Z"/>';
+      o += '<path class="a-l" d="M151,135 L139,153 L152,159 L167,192 M185,135 L197,153 L184,159 L169,192"/>';
+      // уши
+      o += '<path class="a-f" d="M138,70 C129,62 122,70 123,81 C124,93 129,101 139,101"/>';
+      o += '<path class="a-t" d="M134,74 C128,75 127,85 131,93"/>';
+      o += '<path class="a-f" d="M198,70 C207,62 214,70 213,81 C212,93 207,101 197,101"/>';
+      o += '<path class="a-t" d="M202,74 C208,75 209,85 205,93"/>';
+      // голова: высокий купол, скулы, мягкий подбородок
+      o += '<path class="a-f" d="M136,82 C128,46 144,14 168,14 C192,14 208,46 200,82 C200,94 197,105 191,113 C185,121 177,126 168,126 C159,126 151,121 145,113 C139,105 136,94 136,82 Z"/>';
+      // седые волосы над ушами
+      var h = "";
+      for (var k = 0; k < 6; k++) {
+        var y = 50 + k * 5;
+        h += "M" + (139 - k * 0.6) + "," + y + " c-3," + (1 + k * 0.3) + " -5," + (4 + k * 0.4) + " -6," + (8 + k * 0.5) + " ";
+        h += "M" + (197 + k * 0.6) + "," + y + " c3," + (1 + k * 0.3) + " 5," + (4 + k * 0.4) + " 6," + (8 + k * 0.5) + " ";
+      }
+      o += '<path class="a-l" style="stroke-width:.8;stroke-opacity:.75" d="' + h + '"/>';
+      // лоб и виски
+      o += '<path class="a-t" d="M150,40 C159,36 177,36 186,40 M152,47 C161,44 175,44 184,47 M156,54 C163,52 173,52 180,54"/>';
+      // брови
+      o += brow(146, 66, 162, 64, 3.2, 1) + brow(174, 63.5, 190, 65.5, 3.4, -1);
+      // глаза: прищур, складка века, мешки
+      o += '<path class="a-l" d="M149,74.5 C152,71 157,70.8 161,73.8 M175,73.4 C179,70.5 184,70.8 187,74.2"/>';
+      o += '<path class="a-t" d="M148,70.5 C152,67.8 158,67.8 162,70.2 M174,69.8 C178,67.5 184,67.6 188,70.4"/>';
+      o += '<path class="a-t" d="M150.5,76.5 C153.5,78 157,78 160,76.3 M176,76.2 C179,78 182.5,78 185.5,76.6"/>';
+      o += '<path class="a-t" d="M151,81 C154,83 158,83 161,81 M175,81 C178,83 182,83 185,81"/>';
+      o += '<circle class="a-pupil" cx="155.3" cy="74" r="1.7"/><circle class="a-pupil" cx="180.6" cy="73.6" r="1.7"/>';
+      o += '<path class="a-t" d="M146.5,74 l-5,-3 M146.5,76.5 l-5.5,0 M147,79 l-4.5,2.5 M189.5,74 l5,-3 M189.5,76.5 l5.5,0 M189,79 l4.5,2.5"/>';
+      // нос
+      o += '<path class="a-l" d="M165.5,72 C165,81 163.5,88 162.5,93"/>';
+      o += '<path class="a-l" d="M159.5,94.5 C157,97 158.5,101 162.5,101 C164.5,102.5 167.5,103 170,102 M176.5,94.5 C179,97 177.5,101 173.5,101 C172.5,101.8 171.2,102 170,102"/>';
+      // щёки и складки
+      o += '<path class="a-t" d="M156,97 C150.5,102 150,109 153,115 M180,97 C185.5,102 186,109 183,115"/>';
+      o += '<path class="a-t" d="M145,90 C147,94 149,96 152,97 M191,90 C189,94 187,96 184,97"/>';
+      // улыбка с открытым ртом
+      o += '<path class="a-f" d="M156,107 C162,111.5 174,111.5 180,107 C177,113.5 171,116 168,116 C165,116 159,113.5 156,107 Z"/>';
+      o += '<path class="a-t" d="M158,108.6 C163.5,111.8 172.5,111.8 178,108.6"/>';
+      o += '<path class="a-t" d="M154,106 l2,1 M182,106 l-2,1"/>';
+      o += '<path class="a-t" d="M163,122 C166,123 170,123 173,122"/>';
+      o += '</g>';
+      // штамп
+      var x0 = 226, y0 = 146, w = 90, hh = 46;
+      o += '<rect class="a-f" x="' + x0 + '" y="' + y0 + '" width="' + w + '" height="' + hh + '"/>';
+      o += '<line class="a-t" x1="' + x0 + '" y1="' + (y0 + 17) + '" x2="' + (x0 + w) + '" y2="' + (y0 + 17) + '"/>';
+      o += '<line class="a-t" x1="' + x0 + '" y1="' + (y0 + 32) + '" x2="' + (x0 + w) + '" y2="' + (y0 + 32) + '"/>';
+      o += '<text class="a-tx" x="' + (x0 + 5) + '" y="' + (y0 + 12) + '">А. Н. Колмогоров</text>';
+      o += '<text class="a-tx" x="' + (x0 + 5) + '" y="' + (y0 + 27) + '">1903–1987</text>';
+      o += '<text class="a-dtx" x="' + (x0 + 5) + '" y="' + (y0 + 42) + '">лист 5 из 5</text>';
+      return svgWrap(o, "Портрет Андрея Николаевича Колмогорова, нарисованный линиями");
+    },
     ran: function () {
       var o = ground(182);
       o += rect(52, 150, 216, 32, "a-f");
@@ -1213,7 +1290,7 @@ p { margin: 0; }
     $("counter").textContent = "Финиш";
     renderSegments();
     $("card").innerHTML =
-      '<figure class="art">' + ART.novodev() + "</figure>" +
+      '<figure class="art">' + ART.portrait() + "</figure>" +
       '<div class="finish"><p class="eyebrow">Прогулка пройдена</p><p class="big">Спасибо, что прошли этот маршрут</p>' +
       "<p>" + fmtDist(totalM) + " и " + N + " точек: от Академии наук до Новодевичьего. " + esc(T.person.name) + " прожил 84 года, а его теоремы о случайности, сложности и устойчивости работают и сегодня.</p>" +
       '<div class="btn-row"><button class="btn btn-secondary" type="button" id="finShare">Поделиться прогулкой</button><button class="btn btn-secondary" type="button" id="finHome">На обзор</button></div></div>';
